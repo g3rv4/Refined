@@ -46,11 +46,7 @@ chrome.storage.sync.get(['settings'], res => {
         }
 
         function processConversationsView(request) {
-            try {
-                var data = JSON.parse(request.responseText);
-            } catch (e) {
-                return;
-            }
+            const data = JSON.parse(request.responseText);
             my_id = data.self.id;
 
             data.history.messages = filterMessages(data.history.messages);
@@ -58,12 +54,7 @@ chrome.storage.sync.get(['settings'], res => {
         }
 
         function processConversations(request) {
-            try {
-                var data = JSON.parse(request.responseText);
-            } catch (e) {
-                return;
-            }
-
+            const data = JSON.parse(request.responseText);
             data.messages = filterMessages(data.messages);
 
             bindResponse(request, JSON.stringify(data));
@@ -72,15 +63,22 @@ chrome.storage.sync.get(['settings'], res => {
         var my_id = '';
         var proxied = (window as any).XMLHttpRequest.prototype.open;
         (window as any).XMLHttpRequest.prototype.open = function (method, path, async) {
-            // clearInterval(interval);
             if (path == '/api/conversations.view') {
-                this.addEventListener('readystatechange', function () {
-                    processConversationsView(this);
-                }, true);
+                const oldListener = this.onreadystatechange.bind(this);
+                this.onreadystatechange = e => {
+                    if (this.readyState == 4) {
+                        processConversationsView(this);
+                    }
+                    oldListener(e);
+                }
             } else if (path.match(/\/api\/conversations\.history/)) {
-                this.addEventListener('readystatechange', function () {
-                    processConversations(this);
-                }, true);
+                const oldListener = this.onreadystatechange.bind(this);
+                this.onreadystatechange = e => {
+                    if (this.readyState == 4) {
+                        processConversations(this);
+                    }
+                    oldListener(e);
+                }
             }
             return proxied.apply(this, [].slice.call(arguments));
         };
@@ -190,7 +188,7 @@ chrome.storage.sync.get(['settings'], res => {
     display: none !important;
 }`;
         }
-        if(settings.reactions_on_the_right){
+        if (settings.reactions_on_the_right) {
             css += `
 .c-reaction_bar {
     position: absolute;
