@@ -12,7 +12,14 @@ form.addEventListener('submit', e => {
 
     chrome.storage.sync.set({
         'settings': json
-    }, () => window.close());
+    }, () => {
+        chrome.tabs.query({url: 'https://*.slack.com/*'}, tabs => {
+            tabs.filter(t => t.url.match(/^https:\/\/[^\.]+\.slack\.com/))
+                .forEach(t => chrome.tabs.reload(t.id))
+        });
+
+        window.close()
+    });
 });
 
 setTimeout(() => {

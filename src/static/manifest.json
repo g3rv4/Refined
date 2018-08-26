@@ -8,14 +8,29 @@
         "chrome_style": true
     },
     "browser_action": {
-        "default_popup": "options.html"
+        "default_popup": "options.html",
+        "default_icon": {
+            "128": "images/icon128.png",
+            "48": "images/icon48.png",
+            "16": "images/icon16.png"
+        }
     },
-
-    "content_scripts": [{
-        "matches": ["https://*.slack.com/*"],
-        "js": [ "background.js" ],
-        "run_at": "document_start"
-    }],
+    "icons": {
+        "128": "images/icon128.png",
+        "48": "images/icon48.png",
+        "16": "images/icon16.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://*.slack.com/*"
+            ],
+            "js": [
+                "background.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
     "background": {
         "scripts": [
             "background.js"
@@ -23,6 +38,7 @@
     },
     "permissions": [
         "storage",
-        "<all_urls>"
+        "tabs",
+        "https://*.slack.com/*"
     ]
 }
