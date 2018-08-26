@@ -63,8 +63,12 @@ chrome.storage.sync.get(['settings'], res => {
         var my_id = '';
         var proxied = (window as any).XMLHttpRequest.prototype.open;
         (window as any).XMLHttpRequest.prototype.open = function (method, path, async) {
+            let oldListener = e => { };
+            if (this.onreadystatechange) {
+                oldListener = this.onreadystatechange.bind(this);
+            }
+
             if (path == '/api/conversations.view') {
-                const oldListener = this.onreadystatechange.bind(this);
                 this.onreadystatechange = e => {
                     if (this.readyState == 4) {
                         processConversationsView(this);
@@ -72,7 +76,6 @@ chrome.storage.sync.get(['settings'], res => {
                     oldListener(e);
                 }
             } else if (path.match(/\/api\/conversations\.history/)) {
-                const oldListener = this.onreadystatechange.bind(this);
                 this.onreadystatechange = e => {
                     if (this.readyState == 4) {
                         processConversations(this);
