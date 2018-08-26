@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "BetterSlack",
+    "description": "Chrome extension to tweak Slack",
+    "version": "1.0",
+    "options_ui": {
+        "page": "options.html",
+        "chrome_style": true
+    },
+    "browser_action": {
+        "default_popup": "options.html"
+    },
+
+    "content_scripts": [{
+        "matches": ["https://*.slack.com/*"],
+        "js": [ "background.js" ],
+        "run_at": "document_start"
+    }],
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "permissions": [
+        "storage",
+        "<all_urls>"
+    ]
+}

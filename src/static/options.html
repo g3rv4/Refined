@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Better Slack</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <form id="the-form" method="POST" action="">
+            <table>
+                <tr>
+                    <th>Hidden users (include their ids)</th>
+                    <td><input type="text" name="hidden_ids" id="hidden_ids" /></td>
+                </tr>
+                <tr>
+                    <th>Only show your reactions or reactions to your messages</th>
+                    <td><input type="checkbox" name="only_my_reactions" id="only_my_reactions" value="1" /></td>
+                </tr>
+                <tr>
+                    <th>Disable Google Drive previews</th>
+                    <td><input type="checkbox" name="hide_gdrive_preview" id="hide_gdrive_preview" value="1" /></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                        <input type="submit" value="Save" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+
+</html>
