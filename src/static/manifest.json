@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "BetterSlack",
     "description": "Chrome extension to tweak Slack",
-    "version": "1.0",
+    "version": "1.0.1",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true
