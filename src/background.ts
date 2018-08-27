@@ -25,6 +25,9 @@ chrome.storage.sync.get(['settings'], res => {
 
             // remove reactions and files (let's start with gdrive and see if I need to add more)
             messages = messages.map(m => {
+                if (m.text) {
+                    m.text = m.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
+                }
                 if (m.reactions && settings.only_my_reactions) {
                     if (m.user != my_id) {
                         m.reactions = m.reactions.filter(r => r.users.indexOf(my_id) !== -1);
@@ -106,6 +109,14 @@ chrome.storage.sync.get(['settings'], res => {
                             console.log('Ignoring reaction', data);
                         }
                     } else if (data.type === "message") {
+                        if (data.text) {
+                            data.text = data.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
+                            bindWebSocketData(event, JSON.stringify(data));
+                        }
+                        if (data.message && data.message.text) {
+                            data.message.text = data.message.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
+                            bindWebSocketData(event, JSON.stringify(data));
+                        }
                         if (hidden_ids.indexOf(data.user) !== -1) {
                             bindWebSocketData(event, "{}");
                         } else if (data.message && data.message.files && settings.hide_gdrive_preview) {
