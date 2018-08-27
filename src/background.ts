@@ -6,7 +6,6 @@ function injectScript(source: (data: string) => void, data: string) {
 }
 
 chrome.storage.sync.get(['settings'], res => {
-    const data = res.settings || '{}';
     injectScript(function (settings: any) {
         const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
 
@@ -23,7 +22,7 @@ chrome.storage.sync.get(['settings'], res => {
             // remove hidden bots
             messages = messages.filter(m => hidden_ids.indexOf(m.bot_id) === -1 && hidden_ids.indexOf(m.user) === -1);
 
-            // remove reactions and files (let's start with gdrive and see if I need to add more)
+            // remove reactions and files
             messages = messages.map(m => {
                 if (m.text) {
                     m.text = m.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
@@ -40,6 +39,12 @@ chrome.storage.sync.get(['settings'], res => {
                     m.files = m.files.filter(f => f.external_type !== "gdrive");
                     if (!m.files.length) {
                         delete m.files;
+                    }
+                }
+                if (m.attachments && settings.hide_url_previews) {
+                    m.attachments = m.attachments.filter(m => !m.from_url);
+                    if (!m.attachments) {
+                        delete m.attachments;
                     }
                 }
                 return m;
@@ -85,9 +90,9 @@ chrome.storage.sync.get(['settings'], res => {
                     }
                     oldListener(e);
                 }
-            } else if(path.startsWith('/api/chat.postMessage')) {
+            } else if (path.startsWith('/api/chat.postMessage')) {
                 const oldSend = this.send.bind(this);
-                this.send = function(e) {
+                this.send = function (e) {
                     const finalText = e.get('text').replace(/\[([^\]]+)\]\(([^\)]+)\)/g, (_, text, url) => `<${url}|${text}>`);
                     e.set('text', finalText);
                     oldSend(e);
@@ -110,31 +115,46 @@ chrome.storage.sync.get(['settings'], res => {
                 const instance = new target(...args);
 
                 const messageHandler = (event) => {
-                    var data = JSON.parse(event.data);
+                    let data = JSON.parse(event.data);
+
                     if (data.type === "reaction_added" && settings.only_my_reactions) {
                         if (data.user != my_id && data.item_user != my_id) {
-                            bindWebSocketData(event, "{}");
-                            console.log('Ignoring reaction', data);
+                            data = {};
                         }
                     } else if (data.type === "message") {
+                        // hide ignored users
+                        if (hidden_ids.indexOf(data.user) !== -1) {
+                            data = {};
+                        }
+
+                        // did somebody send a markdown link? parse it!
                         if (data.text) {
                             data.text = data.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
-                            bindWebSocketData(event, JSON.stringify(data));
                         }
+
+                        // when it comes with an attachment, it's in here
                         if (data.message && data.message.text) {
                             data.message.text = data.message.text.replace(/\[([^\]]+)\]\(<([^\)]+)>\)/g, (_, text, url) => `<${url}|${text}>`);
-                            bindWebSocketData(event, JSON.stringify(data));
                         }
-                        if (hidden_ids.indexOf(data.user) !== -1) {
-                            bindWebSocketData(event, "{}");
-                        } else if (data.message && data.message.files && settings.hide_gdrive_preview) {
+
+                        // hide gdrive if needed
+                        if (settings.hide_gdrive_preview && data.message && data.message.files) {
                             data.message.files = data.message.files.filter(f => f.external_type !== "gdrive");
                             if (!data.message.files.length) {
                                 delete data.message.files;
                             }
-                            bindWebSocketData(event, JSON.stringify(data));
+                        }
+
+                        // hide preview urls if needed
+                        if (settings.hide_url_previews && data.message && data.message.attachments) {
+                            data.message.attachments = data.message.attachments.filter(m => !m.from_url);
+                            if (!data.message.attachments) {
+                                delete data.message.attachments;
+                            }
                         }
                     }
+
+                    bindWebSocketData(event, JSON.stringify(data));
                 };
                 instance.addEventListener('message', messageHandler);
 
@@ -240,6 +260,22 @@ chrome.storage.sync.get(['settings'], res => {
             sheet.appendChild(document.createTextNode(css));
         }
 
+        // Fix edit on a message with a link
+        var intervalMessageEdit = setInterval(() => {
+            const w: any = window;
+            if (w.TS && w.TS.format) {
+                clearInterval(intervalMessageEdit);
+            } else {
+                return
+            }
+
+            let old = w.TS.format.formatWithOptions;
+            w.TS.format.formatWithOptions = (t,n,r) => {
+                t = t.replace(/<([^<>\|]+)\|([^<>]+)>/g, (_, url, title)=> `[${title}](${url})`);
+                return old(t,n,r);
+            }
+        }, 200);
+
         // I had to
         var interval = setInterval(() => {
             var targetNode = document.querySelector(".messages_header");
@@ -262,5 +298,6 @@ chrome.storage.sync.get(['settings'], res => {
             });
             observer.observe(targetNode, observerOptions);
         }, 200);
-    }, data);
+
+    }, res.settings || '{}');
 });
