@@ -85,6 +85,14 @@ chrome.storage.sync.get(['settings'], res => {
                     }
                     oldListener(e);
                 }
+            } else if(path.startsWith('/api/chat.postMessage')) {
+                const oldSend = this.send.bind(this);
+                this.send = function(e) {
+                    const finalText = e.get('text').replace(/\[([^\]]+)\]\(([^\)]+)\)/g, (_, text, url) => `<${url}|${text}>`);
+                    e.set('text', finalText);
+                    oldSend(e);
+                }.bind(this);
+                console.log(path);
             }
             return proxied.apply(this, [].slice.call(arguments));
         };
