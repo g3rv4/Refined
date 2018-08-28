@@ -226,7 +226,7 @@ chrome.storage.sync.get(['settings'], res => {
         let css = '';
         if (settings.hide_status_emoji) {
             css += `
-.c-message__content_header .emoji-outer.emoji-sizer {
+.c-custom_status {
     display: none !important;
 }`;
         }
@@ -270,9 +270,11 @@ chrome.storage.sync.get(['settings'], res => {
             }
 
             let old = w.TS.format.formatWithOptions;
-            w.TS.format.formatWithOptions = (t,n,r) => {
-                t = t.replace(/<([^<>\|]+)\|([^<>]+)>/g, (_, url, title)=> `[${title}](${url})`);
-                return old(t,n,r);
+            w.TS.format.formatWithOptions = (t, n, r) => {
+                if (r && r.for_edit) {
+                    t = t.replace(/<([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
+                }
+                return old(t, n, r);
             }
         }, 200);
 
