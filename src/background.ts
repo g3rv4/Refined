@@ -226,7 +226,7 @@ chrome.storage.sync.get(['settings'], res => {
         let css = '';
         if (settings.hide_status_emoji) {
             css += `
-.c-custom_status {
+.c-custom_status, .message_current_status {
     display: none !important;
 }`;
         }
