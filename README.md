@@ -1,10 +1,14 @@
 # BetterSlack :unicorn:
 
-A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). Unfortunately, **this project will die soon because injecting javascript into Slack breaks their terms**. Read [my rant here](https://twitter.com/g3rv4/status/1034543123190476801)
+A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). Unfortunately, **this project will die soon because injecting javascript into Slack breaks their terms**. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack)
 
 ## Changelog
 
-### 1.2 - Last public edition
+### 1.2.1 - Last public edition
+
+* Bots were making it past the filter :facepalm:
+
+### 1.2
 
 * Remove the emoji and status from threads as well
 * Enable hangout creation on threads

@@ -159,7 +159,7 @@ chrome.storage.sync.get(['settings'], res => {
                         }
                     } else if (data.type === "message") {
                         // hide ignored users
-                        if (hidden_ids.indexOf(data.user) !== -1) {
+                        if (hidden_ids.indexOf(data.user) !== -1 || hidden_ids.indexOf(data.bot_id) !== -1) {
                             data = {};
                         }
 
