@@ -125,10 +125,15 @@ chrome.storage.sync.get(['settings'], res => {
                         }
                     }
 
+                    if (e.get('reply_broadcast') === "true") {
+                        [...document.getElementsByClassName('reply_broadcast_toggle')].forEach(el => {
+                            (el as any).checked = true;
+                        });
+                    }
+
                     e.set('text', finalText);
                     oldSend(e);
                 }.bind(this);
-                console.log(path);
             }
             return proxied.apply(this, [].slice.call(arguments));
         };
@@ -203,7 +208,7 @@ chrome.storage.sync.get(['settings'], res => {
                 const cl = (e.target as any).classList;
                 if (cl && cl.contains('reply_container_info')) {
                     [...document.getElementsByClassName('reply_broadcast_toggle')].forEach(el => {
-                        el.setAttribute('checked', 'true');
+                        (el as any).checked = true;
                     });
                 }
             });
