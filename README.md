@@ -1,8 +1,12 @@
-# BetterSlack :unicorn:
+# BitterSweet :unicorn:
 
-A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). Unfortunately, **this project will die soon because injecting javascript into Slack breaks their terms**. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack)
+A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). **This extension is no longer in the chrome web store** because it breaks Slack's Acceptable Use Policy. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack)
 
 ## Changelog
+
+### 1.2.2
+
+* Rename it to BitterSweet
 
 ### 1.2.1 - Last public edition
 

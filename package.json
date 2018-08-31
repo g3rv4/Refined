@@ -1,5 +1,5 @@
 {
-  "name": "betterslack",
+  "name": "bittersweet",
   "version": "1.2.1",
   "description": "Chrome extension to tweak Slack",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/g3rv4/BetterSlack.git"
+    "url": "https://github.com/g3rv4/BitterSweet.git"
   },
   "author": "Gervasio Marchand",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/g3rv4/BetterSlack/issues"
+    "url": "https://github.com/g3rv4/BitterSweet/issues"
   },
-  "homepage": "https://github.com/g3rv4/BetterSlack#readme",
+  "homepage": "https://github.com/g3rv4/BitterSweet#readme",
   "devDependencies": {
     "@types/chrome": "0.0.72",
     "copy-webpack-plugin": "^4.5.2",
