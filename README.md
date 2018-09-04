@@ -4,6 +4,10 @@ A chrome extension to improve my Slack experience. You can [read more here](http
 
 ## Changelog
 
+### 1.2.3
+
+* Fix a case when a channel was renamed. This got in the middle of the redirection.
+
 ### 1.2.2
 
 * Rename it to BitterSweet

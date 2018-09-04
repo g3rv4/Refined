@@ -55,17 +55,20 @@ chrome.storage.sync.get(['settings'], res => {
 
         function processConversationsView(request) {
             const data = JSON.parse(request.responseText);
-            my_id = data.self.id;
-
-            data.history.messages = filterMessages(data.history.messages);
-            bindResponse(request, JSON.stringify(data));
+            if (data.ok) {
+                my_id = data.self.id;
+                data.history.messages = filterMessages(data.history.messages);
+                bindResponse(request, JSON.stringify(data));
+            }
         }
 
         function processConversations(request) {
             const data = JSON.parse(request.responseText);
-            data.messages = filterMessages(data.messages);
 
-            bindResponse(request, JSON.stringify(data));
+            if (data.ok) {
+                data.messages = filterMessages(data.messages);
+                bindResponse(request, JSON.stringify(data));
+            }
         }
 
         var my_id = '';
