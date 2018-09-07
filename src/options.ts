@@ -33,7 +33,8 @@ setTimeout(() => {
         e.value = settings.hangout_url || "";
 
         ['only_my_reactions', 'hide_gdrive_preview', 'threads_on_channel',
-         'hide_status_emoji', 'reactions_on_the_right', 'hide_url_previews'].forEach(f=>{
+         'hide_status_emoji', 'reactions_on_the_right', 'hide_url_previews',
+         'unread_on_title'].forEach(f=>{
             if(settings[f]) {
                 document.getElementById(f).setAttribute('checked', 'true');
             }

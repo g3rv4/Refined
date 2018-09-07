@@ -191,6 +191,11 @@ chrome.storage.sync.get(['settings'], res => {
                                 delete data.message.attachments;
                             }
                         }
+
+                        if (settings.unread_on_title) {
+                            // avoid title changing in response to a message received
+                            setTimeout(() => document.title = document.title.replace(/^[\*!] /, ''));
+                        }
                     }
 
                     bindWebSocketData(event, JSON.stringify(data));
@@ -294,6 +299,39 @@ chrome.storage.sync.get(['settings'], res => {
             });
             observer.observe(targetNode, observerOptions);
         }, 200);
+
+        // react monkey patch
+        var reactInterval = setInterval(() => {
+            const w = window as any;
+            if (w.React && w.React.createElement) {
+                clearInterval(reactInterval);
+            } else {
+                return;
+            }
+
+            // Store the original function
+            const originalCreateElement = w.React.createElement;
+
+            // Define a new function
+            w.React.createElement = function () {
+                // Get our arguments as an array
+                const args = Array.prototype.slice.call(arguments);
+
+                const response = originalCreateElement.apply(w.React, args);
+                if (args[0].displayName) {
+                    if (settings.unread_on_title && args[0].displayName === 'UnreadBanner' && response.props.channelId) {
+                        const props = response.props;
+                        let title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
+                        if (props.hasUnreads) {
+                            title = `(${props.displayCount}) ${title}`;
+                        }
+                        document.title = title;
+                    }
+                }
+
+                return response;
+            };
+        }, 100);
 
     }, res.settings || '{}');
 });
