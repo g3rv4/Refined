@@ -4,6 +4,10 @@ A chrome extension to improve my Slack experience. You can [read more here](http
 
 ## Changelog
 
+### 1.2.7
+
+* Fix the markdown links on message edit.
+
 ### 1.2.6
 
 * Fix the counter when people talk on threads (that is... don't show an increase on a threaded message).

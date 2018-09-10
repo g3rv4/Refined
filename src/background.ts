@@ -94,11 +94,14 @@ chrome.storage.sync.get(['settings'], res => {
                     }
                     oldListener(e);
                 }
-            } else if (path.startsWith('/api/chat.postMessage')) {
+            } else if (path.startsWith('/api/chat.postMessage') || path.startsWith('/api/chat.update')) {
                 const oldSend = this.send.bind(this);
                 this.send = function (e) {
                     const originalText = e.get('text');
                     let finalText = originalText.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, (_, text, url) => `<${url}|${text}>`);
+                    if (path.startsWith('/api/chat.update')) {
+                        e.set('parse', 'none');
+                    }
 
                     if (settings.hangout_url) {
                         const w: any = window;
