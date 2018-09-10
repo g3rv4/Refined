@@ -4,6 +4,10 @@ A chrome extension to improve my Slack experience. You can [read more here](http
 
 ## Changelog
 
+### 1.2.5
+
+* Fix the counter on the title when the tab is not focused.
+
 ### 1.2.4
 
 * Add ability to show the number of unread messages on the title.

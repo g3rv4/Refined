@@ -193,8 +193,12 @@ chrome.storage.sync.get(['settings'], res => {
                         }
 
                         if (settings.unread_on_title) {
-                            // avoid title changing in response to a message received
-                            setTimeout(() => document.title = document.title.replace(/^[\*!] /, ''));
+                            const w = window as any;
+                            if (data.channel == w.CurrentChannelId) {
+                                w.CurrentUnread++;
+                                let title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
+                                setTimeout(() => document.title = `(${w.CurrentUnread}) ${title}`);
+                            }
                         }
                     }
 
@@ -300,6 +304,19 @@ chrome.storage.sync.get(['settings'], res => {
             observer.observe(targetNode, observerOptions);
         }, 200);
 
+        if (settings.unread_on_title) {
+            // Avoid adding * or ! on the title
+            var targetNode = document.querySelector('title')
+            var config = { attributes: true, childList: true, subtree: true };
+            var callback = function () {
+                if (document.title.startsWith('*') || document.title.startsWith('!')) {
+                    document.title = document.title.substring(2);
+                }
+            };
+            var observer = new MutationObserver(callback);
+            observer.observe(targetNode, config);
+        }
+
         // react monkey patch
         var reactInterval = setInterval(() => {
             const w = window as any;
@@ -318,14 +335,22 @@ chrome.storage.sync.get(['settings'], res => {
                 const args = Array.prototype.slice.call(arguments);
 
                 const response = originalCreateElement.apply(w.React, args);
-                if (args[0].displayName) {
-                    if (settings.unread_on_title && args[0].displayName === 'UnreadBanner' && response.props.channelId) {
-                        const props = response.props;
-                        let title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
-                        if (props.hasUnreads) {
-                            title = `(${props.displayCount}) ${title}`;
+                const displayName = args[0].displayName;
+                if (displayName) {
+                    const props = response.props;
+                    if (settings.unread_on_title) {
+                        // store the current channel id
+                        if (displayName === 'MessagePane' && props.channelId) {
+                            w.CurrentChannelId = props.channelId;
                         }
-                        document.title = title;
+
+                        // make sure we unset the title marker when we have to
+                        if (displayName === 'UnreadBanner' && props.channelId) {
+                            if (!props.hasUnreads) {
+                                w.CurrentUnread = 0;
+                                document.title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
+                            }
+                        }
                     }
                 }
 
