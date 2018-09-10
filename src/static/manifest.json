@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "BitterSweet",
     "description": "Chrome extension to tweak Slack",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true

@@ -195,9 +195,31 @@ chrome.storage.sync.get(['settings'], res => {
                         if (settings.unread_on_title) {
                             const w = window as any;
                             if (data.channel == w.CurrentChannelId) {
-                                w.CurrentUnread++;
+                                // this is a bit weird... they always send a message, even if it's a message inside a thread
+                                // they then send the message_repied event, and if it's a threaded message also sent to the channel
+                                // then they send a message_changed event without an edited property
+                                // what are you saying? that this is a hack? yes, the whole thing is
+                                if (!data.subtype) {
+                                    // it's a message...
+                                    if (!data.thread_ts) {
+                                        // it's not in a thread!
+                                        w.CurrentUnread++;
+                                    }
+                                } else if (data.subtype === 'message_changed') {
+                                    // message_changed, we still don't know much about it
+                                    if (!data.message.edited) {
+                                        // when a threaded message is sent to the chat, there's no edited property. Are there any
+                                        // other instances when this happens? I have no freaking idea :)
+                                        w.CurrentUnread++
+                                    }
+                                }
+
                                 let title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
-                                setTimeout(() => document.title = `(${w.CurrentUnread}) ${title}`);
+                                if (w.CurrentUnread) {
+                                    document.title = `(${w.CurrentUnread}) ${title}`;
+                                } else {
+                                    document.title = title;
+                                }
                             }
                         }
                     }

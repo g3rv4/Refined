@@ -4,6 +4,10 @@ A chrome extension to improve my Slack experience. You can [read more here](http
 
 ## Changelog
 
+### 1.2.6
+
+* Fix the counter when people talk on threads (that is... don't show an increase on a threaded message).
+
 ### 1.2.5
 
 * Fix the counter on the title when the tab is not focused.
