@@ -73,7 +73,7 @@ chrome.storage.sync.get(['settings'], res => {
 
         var my_id = '';
         var proxied = (window as any).XMLHttpRequest.prototype.open;
-        const re = /@([^@>]+)>/g;
+        const re = /<@([^>]+)>/g;
         (window as any).XMLHttpRequest.prototype.open = function (method, path, async) {
             let oldListener = e => { };
             if (this.onreadystatechange) {
@@ -106,7 +106,7 @@ chrome.storage.sync.get(['settings'], res => {
                     if (settings.hangout_url) {
                         const w: any = window;
                         var lMessage = finalText.toLowerCase();
-                        var userNames = [w.TS.model.user.profile.display_name];
+                        const userIds = [w.TS.model.user.id];
                         var match;
 
                         if (lMessage.indexOf("hangout ") === 0) {
@@ -114,11 +114,12 @@ chrome.storage.sync.get(['settings'], res => {
                             var url;
 
                             while (match = re.exec(name)) {
-                                userNames.push(match[1]);
+                                userIds.push(match[1]);
                             }
 
-                            if (userNames.length > 1) {
-                                userNames = userNames.map(u => u.normalize('NFD').replace(/[\u0300-\u036f]/g, ""));
+                            if (userIds.length > 1) {
+                                const userNames = w.TS.model.members.filter(m => userIds.indexOf(m.id) != -1)
+                                                                    .map(m => m.profile.display_name_normalized);
                                 userNames.sort();
                                 url = userNames.join('-');
                             } else {

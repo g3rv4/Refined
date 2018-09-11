@@ -4,6 +4,10 @@ A chrome extension to improve my Slack experience. You can [read more here](http
 
 ## Changelog
 
+### 1.2.8
+
+* Fix the hangout url when naming people.
+
 ### 1.2.7
 
 * Fix the markdown links on message edit.
