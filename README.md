@@ -1,6 +1,57 @@
 # BitterSweet :unicorn:
 
-A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). **This extension is no longer in the chrome web store** because it breaks Slack's Acceptable Use Policy. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack)
+A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). **This extension is no longer in the chrome web store** because it breaks Slack's Acceptable Use Policy. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack).
+
+## Features
+
+### Markdown links
+
+![markdown demo](img/markdownLinks.gif)
+
+You can use `[Markdown links](https://en.wikipedia.org/wiki/Markdown)` on your messages, and they will be displayed as messages. These links appear as real links to everybody (not only people with the extension installed).
+
+### Muting people / bots
+
+You can mute users or bots. You specify their ids, and the extension makes sure you just don't see their messages.
+
+### Unread message counter on the page title
+
+![indicator image](img/indicator.png)
+
+This feature does a couple things:
+
+* Messages sent to a channel that's not your current channel don't modify the title (the default behavior is to add a * on it)
+* Messages sent to your current channel increase the counter on the title
+
+This lets me keep Slack in a tab while making it easy for me to know how many messages I'm missing. Before, I'd always have a * indicator (because I'm in lots of channels) and wouldn't have a way to know how far behind I was on my team's conversations unless I opened Slack. I had to open Slack a lot.
+
+### Hangout links
+
+![hangout image](img/hangout.gif)
+
+You can just write `hangout topic` and it's going to be replaced with a link to a hangout titled topic. Or, you can do `hangout @someone` and it's going to generate a hangout mentioning @someone.
+
+### Move reactions to the right
+
+![reactions image](img/reactions.png)
+
+Move the reactions to the right... so that they don't take vertical space.
+
+### Threads on channel by default
+
+Do you want the "also send to #channel" checkbox on by default? mark this option :)
+
+### Disable Google Drive previews
+
+Don't show Google Drive previews... under any circumstance. You still see the links and can click on them if you want to.
+
+### Disable Url previews
+
+That... you won't see url previews of any page.
+
+### Only show your reactions or reactions to your messages
+
+This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
