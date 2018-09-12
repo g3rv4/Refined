@@ -55,6 +55,10 @@ This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
+### 1.2.9
+
+* Fix message edit when mentioning a team.
+
 ### 1.2.8
 
 * Fix the hangout url when naming people.

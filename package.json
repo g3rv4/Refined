@@ -1,6 +1,6 @@
 {
   "name": "bittersweet",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "Chrome extension to tweak Slack",
   "main": "index.js",
   "scripts": {

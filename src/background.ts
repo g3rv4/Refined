@@ -301,7 +301,7 @@ chrome.storage.sync.get(['settings'], res => {
             let old = w.TS.format.formatWithOptions;
             w.TS.format.formatWithOptions = (t, n, r) => {
                 if (r && r.for_edit) {
-                    t = t.replace(/<([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
+                    t = t.replace(/<(?!!)([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
                 }
                 return old(t, n, r);
             }
