@@ -1,7 +1,14 @@
-const reloadSlackTabs = () => {
+const reloadSlackTabs = (callback?: () => void) => {
     chrome.tabs.query({ url: 'https://*.slack.com/*' }, tabs => {
-        tabs.filter(t => t.url.match(/^https:\/\/[^\.]+\.slack\.com/))
-            .forEach(t => chrome.tabs.reload(t.id))
+        const tabsToReload = tabs.filter(t => t.url.match(/^https:\/\/[^\.]+\.slack\.com/));
+        let tabsRemaining = tabsToReload.length;
+
+        tabsToReload.forEach(t => chrome.tabs.reload(t.id, null, () => {
+            tabsRemaining--;
+            if (tabsRemaining == 0 && callback) {
+                callback();
+            }
+        }))
     });
 };
 
@@ -19,11 +26,12 @@ form.addEventListener('submit', e => {
 
     chrome.storage.sync.set({
         'settings': json
-    }, () => {
-        reloadSlackTabs();
-        setTimeout(()=>window.close());
-    });
+    }, () => reloadSlackTabs(close));
 });
+
+function close() {
+    window.close();
+}
 
 const uninstall = document.getElementById('uninstall');
 uninstall.addEventListener('click', e => {
@@ -33,14 +41,14 @@ uninstall.addEventListener('click', e => {
 })
 
 const accept = document.getElementById('accept');
-const html = document.querySelector('html');
 accept.addEventListener('click', e => {
     e.preventDefault();
 
     chrome.storage.sync.set({
         'acceptedRisks': new Date()
     }, () => {
-        chrome.browserAction.setBadgeText({text: ''});
+        const html = document.querySelector('html');
+        chrome.browserAction.setBadgeText({ text: '' });
         html.classList.remove('not-accepted');
         html.classList.add('accepted');
         reloadSlackTabs();
@@ -50,6 +58,7 @@ accept.addEventListener('click', e => {
 
 setTimeout(() => {
     chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
+        const html = document.querySelector('html');
         if (res.acceptedRisks) {
             html.classList.add('accepted');
         } else {
@@ -75,6 +84,7 @@ setTimeout(() => {
     })
 }, 100)
 
+const html = document.querySelector('html');
 if (document.URL.indexOf("fullpage=1") !== -1) {
     html.classList.add('full-page');
 } else {

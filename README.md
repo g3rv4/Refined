@@ -55,6 +55,10 @@ This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
+### 1.3.3
+
+* Make it compatible with Firefox.
+
 ### 1.3.2
 
 * Unbreak the popup.
