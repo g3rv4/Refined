@@ -55,6 +55,10 @@ This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
+### 1.3.1
+
+* Renamed it to Taut - a tool for Slack. Because I'm a liar.
+
 ### 1.3 - The last rename! I swear
 
 * Rename it to Taut.
