@@ -55,6 +55,10 @@ This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
+### 1.3.2
+
+* Unbreak the popup.
+
 ### 1.3.1
 
 * Renamed it to Taut - a tool for Slack. Because I'm a liar.

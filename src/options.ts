@@ -50,7 +50,6 @@ accept.addEventListener('click', e => {
 
 setTimeout(() => {
     chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
-        console.log(res.acceptedRisks);
         if (res.acceptedRisks) {
             html.classList.add('accepted');
         } else {
