@@ -1,4 +1,4 @@
-# BitterSweet :unicorn:
+# Taut :unicorn:
 
 A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). **This extension is no longer in the chrome web store** because it breaks Slack's Acceptable Use Policy. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack).
 
@@ -54,6 +54,13 @@ That... you won't see url previews of any page.
 This hides reactions between people (unless you're one of them).
 
 ## Changelog
+
+### 1.3 - The last rename! I swear
+
+* Rename it to Taut.
+* Add notice and ask people to acknowledge the risks of using this extension.
+* Only appear enabled on a slack workspace.
+* Move the background-only logic to background.ts and the content script logic to content_script.ts
 
 ### 1.2.9
 

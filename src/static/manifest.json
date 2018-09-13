@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "BitterSweet",
+    "name": "Taut",
     "description": "Chrome extension to tweak Slack",
-    "version": "1.2.9",
+    "version": "1.3.0",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true
@@ -26,7 +26,7 @@
                 "https://*.slack.com/*"
             ],
             "js": [
-                "background.js"
+                "content_script.js"
             ],
             "run_at": "document_start"
         }
