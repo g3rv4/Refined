@@ -52,7 +52,6 @@ accept.addEventListener('click', e => {
         html.classList.remove('not-accepted');
         html.classList.add('accepted');
         reloadSlackTabs();
-        alert('here');
     });
 })
 
