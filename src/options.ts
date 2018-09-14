@@ -31,12 +31,13 @@ form.addEventListener('submit', e => {
     }, () => reloadSlackTabs(closePopup));
 });
 
-const visitSite = document.getElementById('visit-site');
-visitSite.addEventListener('click', e => {
-    e.preventDefault();
+document.querySelectorAll('.visit-site').forEach(e => {
+    e.addEventListener('click', e => {
+        e.preventDefault();
 
-    chrome.tabs.create({ url: 'https://taut.rocks' }, closePopup);
-})
+        chrome.tabs.create({ url: 'https://taut.rocks' }, closePopup);
+    })
+});
 
 function closePopup() {
     if (document.URL.indexOf("fullpage=1") === -1) {
