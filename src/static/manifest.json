@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Taut - a tool for Slack",
     "description": "Chrome extension to tweak Slack",
-    "version": "1.3.3.3",
+    "version": "1.3.3.4",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true
