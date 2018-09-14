@@ -13,5 +13,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     else if (request.type === 'slackPageOpened') {
         chrome.browserAction.enable(sender.tab.id);
     }
+    else if (request.type === 'closeThisTab') {
+        chrome.tabs.remove(sender.tab.id);
+    }
 });
 //# sourceMappingURL=background.js.map

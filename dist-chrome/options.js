@@ -2,12 +2,17 @@ const reloadSlackTabs = (callback) => {
     chrome.tabs.query({ url: 'https://*.slack.com/*' }, tabs => {
         const tabsToReload = tabs.filter(t => t.url.match(/^https:\/\/[^\.]+\.slack\.com/));
         let tabsRemaining = tabsToReload.length;
-        tabsToReload.forEach(t => chrome.tabs.reload(t.id, null, () => {
-            tabsRemaining--;
-            if (tabsRemaining == 0 && callback) {
-                callback();
-            }
-        }));
+        if (tabsRemaining) {
+            tabsToReload.forEach(t => chrome.tabs.reload(t.id, null, () => {
+                tabsRemaining--;
+                if (tabsRemaining == 0 && callback) {
+                    callback();
+                }
+            }));
+        }
+        else if (callback) {
+            callback();
+        }
     });
 };
 const form = document.getElementById('the-form');
@@ -24,7 +29,12 @@ form.addEventListener('submit', e => {
     }, () => reloadSlackTabs(closePopup));
 });
 function closePopup() {
-    window.close();
+    if (document.URL.indexOf("fullpage=1") === -1) {
+        window.close();
+    }
+    else {
+        chrome.runtime.sendMessage({ type: 'closeThisTab' });
+    }
 }
 const uninstall = document.getElementById('uninstall');
 uninstall.addEventListener('click', e => {

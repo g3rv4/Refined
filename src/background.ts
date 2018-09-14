@@ -8,9 +8,11 @@ chrome.runtime.onInstalled.addListener(d => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === "slackWithoutAccepted"){
-        chrome.browserAction.setBadgeText({text: '!', tabId: sender.tab.id});
-    } else if (request.type === 'slackPageOpened'){
+    if (request.type === "slackWithoutAccepted") {
+        chrome.browserAction.setBadgeText({ text: '!', tabId: sender.tab.id });
+    } else if (request.type === 'slackPageOpened') {
         chrome.browserAction.enable(sender.tab.id);
+    } else if (request.type === 'closeThisTab') {
+        chrome.tabs.remove(sender.tab.id);
     }
 });
