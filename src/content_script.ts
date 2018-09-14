@@ -203,7 +203,7 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 
                         if (settings.unread_on_title) {
                             const w = window as any;
-                            if (data.channel == w.CurrentChannelId) {
+                            if (data.channel == w.CurrentChannelId && data.user != my_id) {
                                 // this is a bit weird... they always send a message, even if it's a message inside a thread
                                 // they then send the message_repied event, and if it's a threaded message also sent to the channel
                                 // then they send a message_changed event without an edited property
