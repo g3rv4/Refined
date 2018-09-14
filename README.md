@@ -55,6 +55,15 @@ This hides reactions between people (unless you're one of them).
 
 ## Changelog
 
+### 1.3.5
+
+* Link to [taut.rocks](https://taut.rocks)!
+
+### 1.3.4
+
+* Switch from webpack to grunt.
+* Don't increment the counter of unread messages on own messages.
+
 ### 1.3.3
 
 * Make it compatible with Firefox.

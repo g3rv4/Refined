@@ -1,10 +1,8 @@
 const reloadSlackTabs = (callback?: () => void) => {
     chrome.tabs.query({ url: 'https://*.slack.com/*' }, tabs => {
-        const tabsToReload = tabs.filter(t => t.url.match(/^https:\/\/[^\.]+\.slack\.com/));
-        let tabsRemaining = tabsToReload.length;
-
+        let tabsRemaining = tabs.length;
         if (tabsRemaining) {
-            tabsToReload.forEach(t => chrome.tabs.reload(t.id, null, () => {
+            tabs.forEach(t => chrome.tabs.reload(t.id, null, () => {
                 tabsRemaining--;
                 if (tabsRemaining == 0 && callback) {
                     callback();
@@ -33,6 +31,13 @@ form.addEventListener('submit', e => {
     }, () => reloadSlackTabs(closePopup));
 });
 
+const visitSite = document.getElementById('visit-site');
+visitSite.addEventListener('click', e => {
+    e.preventDefault();
+
+    chrome.tabs.create({ url: 'https://taut.rocks' }, closePopup);
+})
+
 function closePopup() {
     if (document.URL.indexOf("fullpage=1") === -1) {
         window.close();
@@ -56,7 +61,6 @@ accept.addEventListener('click', e => {
         'acceptedRisks': new Date()
     }, () => {
         const html = document.querySelector('html');
-        chrome.browserAction.setBadgeText({ text: '' });
         html.classList.remove('not-accepted');
         html.classList.add('accepted');
         reloadSlackTabs();
