@@ -1,3 +1,5 @@
 node_modules/
 .tscache/
 zip/
+dist-ff/
+dist-chrome/
