@@ -1,6 +1,6 @@
 # Taut :unicorn:
 
-A chrome extension to improve my Slack experience. You can [read more here](https://g3rv4.com/2018/08/betterslack). **This extension is no longer in the chrome web store** because it breaks Slack's Acceptable Use Policy. Read [my post here](https://g3rv4.com/2018/08/bye-bye-betterslack).
+An extension to improve my Slack experience. You can find it on the [chrome web store](https://chrome.google.com/webstore/detail/taut-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh) and on [firefox's store](https://addons.mozilla.org/en-US/firefox/addon/taut-a-tool-for-slack/).
 
 ## Features
 
