@@ -4,8 +4,8 @@
   "description": "Chrome extension to tweak Slack",
   "main": "index.js",
   "scripts": {
-    "watch": "webpack --config webpack/webpack.dev.js --watch",
-    "build": "webpack --config webpack/webpack.dev.js"
+    "watch": "grunt",
+    "build": "grunt build"
   },
   "repository": {
     "type": "git",
@@ -17,15 +17,15 @@
     "url": "https://github.com/g3rv4/Taut/issues"
   },
   "homepage": "https://github.com/g3rv4/Taut#readme",
-  "devDependencies": {
+  "dependencies": {
     "@types/chrome": "0.0.72",
-    "copy-webpack-plugin": "^4.5.2",
-    "source-map-loader": "^0.2.4",
-    "style-loader": "^0.22.1",
-    "ts-loader": "^4.5.0",
-    "typescript": "^3.0.1",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0",
-    "webpack-merge": "^4.1.4"
+    "grunt": "^1.0.3",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-ts": "^6.0.0-beta.21",
+    "typescript": "^3.0.1"
   }
 }
