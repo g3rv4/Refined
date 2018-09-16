@@ -76,7 +76,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask('fix-chrome', "Fix Chrome's manifest", function () {
         let manifest = grunt.file.readJSON("dist-chrome/manifest.json");
+
+        // fix manifest
         delete manifest.applications;
+        manifest.permissions = manifest.permissions.filter(p => p != "tabs");
+
         grunt.file.write("dist-chrome/manifest.json", JSON.stringify(manifest, null, 2));
     });
 };
