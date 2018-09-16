@@ -53,6 +53,19 @@ That... you won't see url previews of any page.
 
 This hides reactions between people (unless you're one of them).
 
+## Build from source
+
+You need to have nodejs and npm installed. Once you do, just cloning the repo and running
+
+```
+npm install && npm run build
+```
+
+will generate:
+
+* A `dist-chrome` folder. You can [load this extension unpacked](https://developer.chrome.com/extensions/getstarted#manifest) both on Chrome and Opera from this folder
+* A `dist-ff` folder. You can [load it temporarily on Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
+
 ## Changelog
 
 ### 1.3.5
