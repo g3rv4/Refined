@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-      "outDir": "./dist/ff/",
+      "outDir": "./dist/opera/",
       "rootDir": "./src/",
-      "sourceMap": true,
+      "sourceMap": false,
       "strict": false,
       "module": "commonjs",
       "target": "es6",

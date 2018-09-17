@@ -1,6 +1,6 @@
 # Taut :unicorn:
 
-An extension to improve my Slack experience. You can find it on the [chrome web store](https://chrome.google.com/webstore/detail/taut-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh) and on [firefox's store](https://addons.mozilla.org/en-US/firefox/addon/taut-a-tool-for-slack/).
+An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/taut-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/taut-a-tool-for-slack/) and [Opera](https://addons.opera.com/en/extensions/details/taut-a-tool-for-slack/).
 
 ## Features
 
@@ -63,8 +63,9 @@ npm install && npm run build
 
 will generate:
 
-* A `dist-chrome` folder. You can [load this extension unpacked](https://developer.chrome.com/extensions/getstarted#manifest) both on Chrome and Opera from this folder
-* A `dist-ff` folder. You can [load it temporarily on Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
+* A `dist/chrome` folder. You can [load this extension unpacked](https://developer.chrome.com/extensions/getstarted#manifest) both on Chrome and Opera from this folder
+* A `dist/ff` folder. You can [load it temporarily on Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
+* A `dist/opera` folder that is basically the same as Chrome but without map files (because they asked me to remove them in order to accept it on their store). You can then [load this extension unpacked](https://dev.opera.com/extensions/basics/#step-4-testing-your-extension)
 
 ## Changelog
 
