@@ -6,11 +6,14 @@ function injectScript(source: (data: string) => void, data: string) {
 }
 
 chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
-    chrome.runtime.sendMessage({type: 'slackPageOpened'});
+    chrome.runtime.sendMessage({ type: 'slackPageOpened' });
     if (!res.acceptedRisks) {
-        chrome.runtime.sendMessage({type: 'slackWithoutAccepted'});
         return;
     }
+
+    res.settings = JSON.parse(res.settings || '{}');
+    res.settings.extensionId = chrome.runtime.id;
+
     injectScript(function (settings: any) {
         const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
 
@@ -203,7 +206,7 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 
                         if (settings.unread_on_title) {
                             const w = window as any;
-                            if (data.channel == w.CurrentChannelId && data.user != my_id) {
+                            if (data.channel == w.TS.model.active_channel_id && data.user != my_id) {
                                 // this is a bit weird... they always send a message, even if it's a message inside a thread
                                 // they then send the message_repied event, and if it's a threaded message also sent to the channel
                                 // then they send a message_changed event without an edited property
@@ -257,7 +260,18 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
             });
         }
 
-        let css = '';
+        let css = `
+.taut--muteLink {
+    font-family: NotoSansJP,Slack-Lato,appleLogo,sans-serif;
+    cursor: pointer;
+    margin-left: 5px;
+    opacity: 0;
+}
+
+.c-message--hover .taut--muteLink {
+    opacity: 0.5;
+}
+`;
         if (settings.hide_status_emoji) {
             css += `
 .c-custom_status, .message_current_status {
@@ -286,13 +300,11 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 `;
         }
 
-        if (css) {
-            var sheet = document.createElement('style');
-            sheet.type = 'text/css';
-            (window as any).customSheet = sheet;
-            (document.head || document.getElementsByTagName('head')[0]).appendChild(sheet);
-            sheet.appendChild(document.createTextNode(css));
-        }
+        var sheet = document.createElement('style');
+        sheet.type = 'text/css';
+        (window as any).customSheet = sheet;
+        (document.head || document.getElementsByTagName('head')[0]).appendChild(sheet);
+        sheet.appendChild(document.createTextNode(css));
 
         // Fix edit on a message with a link
         var intervalMessageEdit = setInterval(() => {
@@ -335,6 +347,52 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
             observer.observe(targetNode, observerOptions);
         }, 200);
 
+        var interval2 = setInterval(() => {
+            var targetNode = targetNode = document.querySelector(".client_main_container");
+            if (targetNode) {
+                clearInterval(interval2);
+            } else {
+                return;
+            }
+
+            var observerOptions = {
+                childList: true,
+                attributes: false,
+                subtree: true
+            }
+
+            var observer = new MutationObserver((records, _) => {
+                const headers = records.map(r => [...r.addedNodes] as any)
+                    .reduce((a, b) => a.concat(b))
+                    .map(e => {
+                        if (e.querySelectorAll) {
+                            const res = e.querySelectorAll('.c-message__content_header');
+                            if (res.length) {
+                                return [...res];
+                            }
+                        }
+                    })
+                    .filter(e => e)
+                    .reduce((a, b) => a.concat(b), []);
+
+                headers.forEach(h => {
+                    if (h.children.length === 2) {
+                        const userId = h.querySelector('.c-message__sender_link').href.split('/').pop();
+
+                        const muteSpan = document.createElement('span');
+                        muteSpan.className = 'taut--muteLink';
+                        muteSpan.innerText = 'mute';
+                        muteSpan.addEventListener('click', e => {
+                            chrome.runtime.sendMessage(settings.extensionId, { type: 'muteUser', userId });
+                        })
+
+                        h.appendChild(muteSpan);
+                    }
+                })
+            });
+            observer.observe(targetNode, observerOptions);
+        }, 200);
+
         if (settings.unread_on_title) {
             // Avoid adding * or ! on the title
             var targetNode = document.querySelector('title')
@@ -365,19 +423,13 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                 // Get our arguments as an array
                 const args = Array.prototype.slice.call(arguments);
 
-                const response = originalCreateElement.apply(w.React, args);
                 const displayName = args[0].displayName;
                 if (displayName) {
-                    const props = response.props;
+                    const props = args[1];
                     if (settings.unread_on_title) {
-                        // store the current channel id
-                        if (displayName === 'MessagePane' && props.channelId) {
-                            w.CurrentChannelId = props.channelId;
-                        }
-
                         // make sure we unset the title marker when we have to
-                        if (displayName === 'UnreadBanner' && props.channelId) {
-                            if (!props.hasUnreads) {
+                        if (displayName === 'UnreadBanner') {
+                            if (!props.hasUnreads && props.channelId) {
                                 w.CurrentUnread = 0;
                                 document.title = document.title.replace(/^(([\*!] )|(\([0-9]+\) ))*/, '');
                             }
@@ -385,9 +437,9 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                     }
                 }
 
-                return response;
+                return originalCreateElement.apply(w.React, args);
             };
         }, 100);
 
-    }, res.settings || '{}');
+    }, JSON.stringify(res.settings));
 });

@@ -13,3 +13,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         chrome.tabs.remove(sender.tab.id);
     }
 });
+
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+    chrome.storage.sync.get(['settings'], res => {
+        const settings = JSON.parse(res.settings || '{}');
+        const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
+        if (request.type === 'muteUser') {
+            if(hidden_ids.indexOf(request.userId) === -1){
+                hidden_ids.push(request.userId);
+            }
+            settings.hidden_ids = hidden_ids.join(', ');
+        }
+
+        var json = JSON.stringify(settings);
+        chrome.storage.sync.set({
+            'settings': json
+        }, () =>{
+            chrome.tabs.reload(sender.tab.id);
+        });
+    })
+});

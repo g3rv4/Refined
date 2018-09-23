@@ -69,6 +69,10 @@ will generate:
 
 ## Changelog
 
+### 1.3.6
+
+* Make it easier to mute users
+
 ### 1.3.5
 
 * Link to [taut.rocks](https://taut.rocks)!
