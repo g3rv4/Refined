@@ -5,6 +5,15 @@ function injectScript(source: (data: string) => void, data: string) {
     document.documentElement.appendChild(elem);
 }
 
+window.addEventListener("message", (event) => {
+    if (event.source == window &&
+        event.data) {
+        if (event.data.type === 'muteUser') {
+            chrome.runtime.sendMessage({ type: 'muteUser', userId: event.data.userId });
+        }
+    }
+});
+
 chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
     chrome.runtime.sendMessage({ type: 'slackPageOpened' });
     if (!res.acceptedRisks) {
@@ -12,7 +21,6 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
     }
 
     res.settings = JSON.parse(res.settings || '{}');
-    res.settings.extensionId = chrome.runtime.id;
 
     injectScript(function (settings: any) {
         const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
@@ -383,7 +391,10 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                         muteSpan.className = 'taut--muteLink';
                         muteSpan.innerText = 'mute';
                         muteSpan.addEventListener('click', e => {
-                            chrome.runtime.sendMessage(settings.extensionId, { type: 'muteUser', userId });
+                            window.postMessage({
+                                type: "muteUser",
+                                userId
+                            }, '*');
                         })
 
                         h.appendChild(muteSpan);
