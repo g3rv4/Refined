@@ -385,19 +385,22 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 
                 headers.forEach(h => {
                     if (h.children.length === 2) {
-                        const userId = h.querySelector('.c-message__sender_link').href.split('/').pop();
+                        const sender = h.querySelector('.c-message__sender_link');
+                        if (sender) {
+                            const userId = sender.href.split('/').pop();
 
-                        const muteSpan = document.createElement('span');
-                        muteSpan.className = 'taut--muteLink';
-                        muteSpan.innerText = 'mute';
-                        muteSpan.addEventListener('click', e => {
-                            window.postMessage({
-                                type: "muteUser",
-                                userId
-                            }, '*');
-                        })
+                            const muteSpan = document.createElement('span');
+                            muteSpan.className = 'taut--muteLink';
+                            muteSpan.innerText = 'mute';
+                            muteSpan.addEventListener('click', e => {
+                                window.postMessage({
+                                    type: "muteUser",
+                                    userId
+                                }, '*');
+                            })
 
-                        h.appendChild(muteSpan);
+                            h.appendChild(muteSpan);
+                        }
                     }
                 })
             });
