@@ -12,7 +12,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.type === 'closeThisTab') {
         chrome.tabs.remove(sender.tab.id);
     } else if(request.type === 'muteUser') {
-        debugger;
         chrome.storage.sync.get(['settings'], res => {
             const settings = JSON.parse(res.settings || '{}');
             const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
