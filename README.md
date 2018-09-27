@@ -69,6 +69,10 @@ will generate:
 
 ## Changelog
 
+### 1.3.7
+
+* Add ability to use links on the topics :) thanks [HerrFolgreich](https://github.com/HerrFolgreich)!
+
 ### 1.3.6
 
 * Make it easier to mute users
