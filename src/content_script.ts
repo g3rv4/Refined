@@ -110,6 +110,14 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                     }
                     oldListener(e);
                 }
+            } else if (path.match(/\/api\/conversations\.setTopic/)) {
+                const oldSend = this.send.bind(this);
+                this.send = function (e) {
+                    const originalTopic = e.get('topic');
+                    let finalTopic = originalTopic.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, (_, text, url) => `<${url}|${text}>`);
+                    e.set('topic', finalTopic);
+                    oldSend(e);
+                }.bind(this);
             } else if (path.startsWith('/api/chat.postMessage') || path.startsWith('/api/chat.update')) {
                 const oldSend = this.send.bind(this);
                 this.send = function (e) {
