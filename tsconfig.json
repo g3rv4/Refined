@@ -8,7 +8,7 @@
       "target": "es6",
       "jsx": "react",
       "moduleResolution": "node",
-      "experimentalDecorators": true,
+      "noEmitHelpers": true,
       "typeRoots": [
         "node_modules/@types"
       ]

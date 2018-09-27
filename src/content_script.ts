@@ -10,6 +10,8 @@ window.addEventListener("message", (event) => {
         event.data) {
         if (event.data.type === 'muteUser') {
             chrome.runtime.sendMessage({ type: 'muteUser', userId: event.data.userId });
+        } else if(event.data.type === 'unmuteUsers') {
+            chrome.runtime.sendMessage({ type: 'unmuteUsers', userIds: event.data.userIds });
         }
     }
 });
@@ -23,6 +25,21 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
     res.settings = JSON.parse(res.settings || '{}');
 
     injectScript(function (settings: any) {
+
+        // me likey async/await
+        // add the helper
+        var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+            return new (P || (P = Promise))(function (resolve, reject) {
+                function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+                function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+                function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+                step((generator = generator.apply(thisArg, _arguments || [])).next());
+            });
+        };
+        ///////
+
+        (window as any).Taut = {};
+
         const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
 
         function bindResponse(request, response) {
@@ -344,33 +361,10 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
             }
         }, 200);
 
-        // I had to
-        var interval = setInterval(() => {
-            var targetNode = document.querySelector(".messages_header");
-            if (targetNode) {
-                clearInterval(interval);
-            } else {
-                return;
-            }
-            var observerOptions = {
-                childList: true,
-                attributes: true,
-                subtree: true
-            }
-
-            var observer = new MutationObserver((e, observer) => {
-                var text = document.getElementById('channel_topic_text');
-                if (text && text.innerText === 'Not the Slack complaint room.') {
-                    text.innerHTML = '<strike>Not</strike> the Slack <strike>complaint</strike> <span style="color: red; font-weight: bold">modding</span> room.';
-                }
-            });
-            observer.observe(targetNode, observerOptions);
-        }, 200);
-
-        var interval2 = setInterval(() => {
+        const intervalMainContainer = setInterval(() => {
             var targetNode = targetNode = document.querySelector(".client_main_container");
             if (targetNode) {
-                clearInterval(interval2);
+                clearInterval(intervalMainContainer);
             } else {
                 return;
             }
@@ -417,6 +411,124 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                 })
             });
             observer.observe(targetNode, observerOptions);
+        }, 200);
+
+        // yup, the body can be null if this runs soon enough
+        const intervalBody = setInterval(() => {
+            if (document.body) {
+                clearInterval(intervalBody);
+            } else {
+                return;
+            }
+
+            // listen for the modal creation
+            const modalObserver = new MutationObserver((records, _) => {
+                const modal = records.map(r => [...r.addedNodes] as any)
+                    .reduce((a, b) => a.concat(b))
+                    .filter(r => r.id === 'fs_modal')[0];
+
+                if (modal) {
+                    // add an observer to the contents_container element
+                    const target = modal.querySelector('.contents');
+                    if (target) {
+                        const contentObserver = new MutationObserver(async (records, _) => {
+                            const afterElement = records.map(r => [...r.addedNodes] as any)
+                                .reduce((a, b) => a.concat(b))
+                                .filter(r => r.id === 'prefs_inline_media')[0];
+
+                            if (afterElement && hidden_ids.length) {
+                                const form = document.createElement('form');
+
+                                const h2 = document.createElement('h2');
+                                h2.className = 'large_top_margin inline_block';
+                                h2.textContent = 'Muted users';
+                                form.appendChild(h2);
+
+                                const p = document.createElement('p');
+                                form.appendChild(p);
+
+                                const w: any = window;
+                                if (!w.Taut.users) {
+                                    let response = await fetch('https://slack.com/api/users.list?token=' + w.TS.model.api_token);
+                                    let json = await response.json();
+                                    w.Taut.users = json.members.filter(u => !u.deleted);;
+                                }
+                                if (!w.Taut.bots) {
+                                    let response = await fetch('https://slack.com/api/bots.list?token=' + w.TS.model.api_token);
+                                    let json = await response.json();
+                                    w.Taut.bots = json.bots.filter(b => !b.deleted);
+                                }
+
+                                const userIds = w.Taut.users.map(m => m.id);
+                                const botIds = w.Taut.bots.map(b => b.id);
+
+                                hidden_ids.forEach(userId => {
+                                    let muted = undefined;
+                                    if (userId[0] === 'U') {
+                                        // it's a user
+                                        if (userIds.indexOf(userId) !== -1) {
+                                            muted = w.Taut.users.filter(m => m.id == userId)[0];
+                                        }
+                                    } else if (userId[0] === 'B') {
+                                        // it's a bot
+                                        if (botIds.indexOf(userId) !== -1) {
+                                            muted = w.Taut.bots.filter(m => m.id == userId)[0];
+                                        }
+                                    }
+                                    if (muted) {
+                                        // the muted user is in this workspace!
+                                        const current = document.createElement('label');
+                                        current.className = 'checkbox';
+
+                                        const input = document.createElement('input');
+                                        input.value = "1";
+                                        input.name = muted.id;
+                                        input.type = 'checkbox';
+                                        current.appendChild(input);
+
+                                        const span = document.createElement('span');
+                                        span.innerText = muted.profile ? muted.profile.real_name : muted.name;
+                                        current.appendChild(span);
+
+                                        p.appendChild(current);
+                                    }
+                                });
+
+                                if (p.childElementCount > 0) {
+                                    const btn = document.createElement('button');
+                                    btn.type = 'submit';
+                                    btn.className = 'btn btn_outline ladda-button';
+                                    btn.innerText = 'Unmute the selected users';
+                                    form.appendChild(btn);
+
+                                    form.appendChild(document.createElement('hr'));
+
+                                    form.onsubmit = e => {
+                                        e.preventDefault();
+
+                                        const formData = new FormData(e.target as HTMLFormElement);
+                                        const userIds = [];
+                                        formData.forEach(function (_, key) {
+                                            userIds.push(key);
+                                        });
+
+                                        if (userIds.length) {
+                                            window.postMessage({
+                                                type: "unmuteUsers",
+                                                userIds
+                                            }, '*');
+                                        }
+                                    }
+                                    target.insertBefore(form, afterElement);
+                                }
+                            }
+                        });
+                        contentObserver.observe(target, { childList: true, attributes: false, subtree: false });
+                    }
+                }
+            });
+
+            modalObserver.observe(document.body, { childList: true, attributes: false, subtree: false });
         }, 200);
 
         if (settings.unread_on_title) {

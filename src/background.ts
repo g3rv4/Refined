@@ -11,21 +11,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         chrome.pageAction.show(sender.tab.id);
     } else if (request.type === 'closeThisTab') {
         chrome.tabs.remove(sender.tab.id);
-    } else if(request.type === 'muteUser') {
+    } else if (request.type === 'muteUser') {
         chrome.storage.sync.get(['settings'], res => {
             const settings = JSON.parse(res.settings || '{}');
             const hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
-            if (request.type === 'muteUser') {
-                if(hidden_ids.indexOf(request.userId) === -1){
-                    hidden_ids.push(request.userId);
-                }
-                settings.hidden_ids = hidden_ids.join(', ');
+            if (hidden_ids.indexOf(request.userId) === -1) {
+                hidden_ids.push(request.userId);
             }
+            settings.hidden_ids = hidden_ids.join(', ');
 
             var json = JSON.stringify(settings);
             chrome.storage.sync.set({
                 'settings': json
-            }, () =>{
+            }, () => {
+                chrome.tabs.reload(sender.tab.id);
+            });
+        })
+    } else if (request.type === 'unmuteUsers') {
+        chrome.storage.sync.get(['settings'], res => {
+            const settings = JSON.parse(res.settings || '{}');
+            let hidden_ids = settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : [];
+            hidden_ids = hidden_ids.filter(i => request.userIds.indexOf(i) === -1);
+            settings.hidden_ids = hidden_ids.join(', ');
+
+            var json = JSON.stringify(settings);
+            chrome.storage.sync.set({
+                'settings': json
+            }, () => {
                 chrome.tabs.reload(sender.tab.id);
             });
         })
