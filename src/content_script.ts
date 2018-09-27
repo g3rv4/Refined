@@ -279,6 +279,10 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 .c-message--hover .taut--muteLink {
     opacity: 0.5;
 }
+
+.c-message--dense .taut--muteLink {
+    display: none;
+}
 `;
         if (settings.hide_status_emoji) {
             css += `
