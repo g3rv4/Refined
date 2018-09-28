@@ -10,7 +10,7 @@ window.addEventListener("message", (event) => {
         event.data) {
         if (event.data.type === 'muteUser') {
             chrome.runtime.sendMessage({ type: 'muteUser', userId: event.data.userId });
-        } else if(event.data.type === 'unmuteUsers') {
+        } else if (event.data.type === 'unmuteUsers') {
             chrome.runtime.sendMessage({ type: 'unmuteUsers', userIds: event.data.userIds });
         }
     }
@@ -361,8 +361,9 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
             }
         }, 200);
 
+        // intercept clicks on the user names
         const intervalMainContainer = setInterval(() => {
-            var targetNode = targetNode = document.querySelector(".client_main_container");
+            var targetNode = document.querySelector(".client_main_container");
             if (targetNode) {
                 clearInterval(intervalMainContainer);
             } else {
@@ -380,7 +381,7 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                     .reduce((a, b) => a.concat(b))
                     .map(e => {
                         if (e.querySelectorAll) {
-                            const res = e.querySelectorAll('.c-message__content_header');
+                            const res = e.querySelectorAll('.c-message__sender_link');
                             if (res.length) {
                                 return [...res];
                             }
@@ -390,22 +391,11 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
                     .reduce((a, b) => a.concat(b), []);
 
                 headers.forEach(h => {
-                    if (h.children.length === 2) {
-                        const sender = h.querySelector('.c-message__sender_link');
-                        if (sender) {
-                            const userId = sender.href.split('/').pop();
-
-                            const muteSpan = document.createElement('span');
-                            muteSpan.className = 'taut--muteLink';
-                            muteSpan.innerText = 'mute';
-                            muteSpan.addEventListener('click', e => {
-                                window.postMessage({
-                                    type: "muteUser",
-                                    userId
-                                }, '*');
-                            })
-
-                            h.appendChild(muteSpan);
+                    if (!h.dataset.taut) {
+                        h.dataset.taut = "1";
+                        h.onclick = e => {
+                            const userId = e.target.href.split('/').pop();
+                            (window as any).Taut.last_clicked = userId;
                         }
                     }
                 })
@@ -413,7 +403,49 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
             observer.observe(targetNode, observerOptions);
         }, 200);
 
+        const intervalClientUi = setInterval(() => {
+            var targetNode = document.querySelector("#client-ui");
+            if (targetNode) {
+                clearInterval(intervalClientUi);
+            } else {
+                return;
+            }
+
+            var observerOptions = {
+                childList: true,
+                attributes: false,
+                subtree: false
+            }
+
+            var observer = new MutationObserver((records, _) => {
+                const menu = records.map(r => [...r.addedNodes] as any)
+                    .reduce((a, b) => a.concat(b))
+                    .filter(n => n.id === 'menu')[0];
+
+                if (menu) {
+                    const li: any = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.innerText = "Mute user";
+                    a.onclick = _ => {
+                        const userId = (window as any).Taut.last_clicked
+                        window.postMessage({
+                            type: "muteUser",
+                            userId
+                        }, '*');
+                    }
+                    li.appendChild(a);
+
+                    const items = menu.querySelector('#menu_items');
+                    const firstDivider = items.querySelector('.divider');
+                    items.insertBefore(li, firstDivider)
+                }
+            });
+
+            observer.observe(targetNode, observerOptions);
+        }, 200);
+
         // yup, the body can be null if this runs soon enough
+        // this handles the unmute logic
         const intervalBody = setInterval(() => {
             if (document.body) {
                 clearInterval(intervalBody);
@@ -423,10 +455,46 @@ chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
 
             // listen for the modal creation
             const modalObserver = new MutationObserver((records, _) => {
-                const modal = records.map(r => [...r.addedNodes] as any)
-                    .reduce((a, b) => a.concat(b))
-                    .filter(r => r.id === 'fs_modal')[0];
+                const nodes = records.map(r => [...r.addedNodes] as any)
+                    .reduce((a, b) => a.concat(b));
 
+                // this is the modal with application details
+                const reactModal = nodes.filter(n => n.classList && n.classList.contains('ReactModalPortal'))[0];
+                if (reactModal) {
+                    const div = document.createElement('div');
+                    div.className = 'c-menu_item__li';
+
+                    const btn = document.createElement('button');
+                    btn.onclick = _ => {
+                        const userId = (window as any).Taut.last_clicked
+                        window.postMessage({
+                            type: "muteUser",
+                            userId
+                        }, '*');
+                    };
+                    btn.onmouseenter = e => {
+                        document.querySelectorAll('.c-menu_item__button--highlighted').forEach(e => e.classList.remove('c-menu_item__button--highlighted'));
+                        (e.target as HTMLButtonElement).classList.add('c-menu_item__button--highlighted');
+                    }
+                    btn.onmouseleave = e => {
+                        (e.target as HTMLButtonElement).classList.remove('c-menu_item__button--highlighted');
+                    }
+                    div.appendChild(btn);
+                    btn.className = 'c-button-unstyled c-menu_item__button';
+
+                    const div2 = document.createElement('div');
+                    btn.appendChild(div2);
+                    div2.className = 'c-menu_item__label';
+                    div2.innerText = 'Mute user';
+
+                    const items = reactModal.querySelector('.c-menu__items');
+                    const secondDivider = items.querySelectorAll('.c-menu_separator__li')[1];
+
+                    items.insertBefore(div, secondDivider)
+                }
+
+                // this is the modal for the preferences
+                const modal = nodes.filter(r => r.id === 'fs_modal')[0];
                 if (modal) {
                     // add an observer to the contents_container element
                     const target = modal.querySelector('.contents');

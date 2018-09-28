@@ -14,6 +14,8 @@ You can use `[Markdown links](https://en.wikipedia.org/wiki/Markdown)` on your m
 
 You can mute users or bots. You specify their ids, and the extension makes sure you just don't see their messages.
 
+![muting users](img/muting.gif)
+
 ### Unread message counter on the page title
 
 ![indicator image](img/indicator.png)
@@ -68,6 +70,10 @@ will generate:
 * A `dist/opera` folder that is basically the same as Chrome but without map files (because they asked me to remove them in order to accept it on their store). You can then [load this extension unpacked](https://dev.opera.com/extensions/basics/#step-4-testing-your-extension)
 
 ## Changelog
+
+### 1.3.8
+
+* Nicer mute and unmute!
 
 ### 1.3.7
 
