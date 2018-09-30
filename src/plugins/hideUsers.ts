@@ -214,7 +214,7 @@ export default class HideUsers extends MessageTweakerPlugin {
                 const menu = nodes.filter(n => n.id === 'menu')[0];
                 const lastClicked = this.getLocalValue('last_clicked');
 
-                if (menu && !lastClicked.endsWith(`.${this.getSlackModel().user.id}`)) {
+                if (menu && lastClicked && !lastClicked.endsWith(`.${this.getSlackModel().user.id}`)) {
                     const li: any = document.createElement('li');
                     const a = document.createElement('a');
                     a.innerText = "Mute";
@@ -229,7 +229,8 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                     const items = menu.querySelector('#menu_items');
                     const firstDivider = items.querySelector('.divider');
-                    items.insertBefore(li, firstDivider)
+                    items.insertBefore(li, firstDivider);
+                    this.setLocalValue('last_clicked', undefined);
                 }
             });
 

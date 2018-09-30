@@ -2,10 +2,10 @@
   "compilerOptions": {
     "outDir": "./dist/ff/",
     "rootDir": "./src/",
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": false,
     "module": "esnext",
-    "target": "es6",
+    "target": "es2017",
     "moduleResolution": "node",
     "typeRoots": [
       "node_modules/@types"
