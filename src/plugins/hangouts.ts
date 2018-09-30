@@ -1,13 +1,6 @@
 import Plugin from './plugin.js';
 
 export default class Hangouts extends Plugin {
-    private userIdRegex: RegExp;
-
-    public constructor(name: string, settings: any) {
-        super(name, settings);
-        this.userIdRegex = /<@([^>]+)>/g;
-    }
-
     public init(wsPlugins: Plugin[], xhrPlugins: Plugin[]): void {
         xhrPlugins.push(this);
     }
@@ -15,7 +8,6 @@ export default class Hangouts extends Plugin {
     public interceptXHR(request, method, path, async) {
         if (this.settings.url && (path.startsWith('/api/chat.postMessage') || path.startsWith('/api/chat.update'))) {
             const oldSend = request.send.bind(request);
-            const re = this.userIdRegex;
             const defaultUrl = this.settings.url;
             request.send = function (e) {
                 const w: any = window;
@@ -29,7 +21,7 @@ export default class Hangouts extends Plugin {
                     var name = text.substring(8);
                     var url;
 
-                    while (match = re.exec(name)) {
+                    while (match = /<@([^>]+)>/g.exec(name)) {
                         userIds.push(match[1]);
                     }
 

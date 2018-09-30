@@ -32,11 +32,11 @@ export default class HideUsers extends Plugin {
         return data;
     }
 
-    static ProcessMessage(request: any, sender: chrome.runtime.MessageSender) {
+    static ProcessMessage(request: any, pluginName: string, sender: chrome.runtime.MessageSender) {
         // this runs on the background thread
         chrome.storage.sync.get(['pluginSettings'], res => {
             const pluginSettings = JSON.parse(res.pluginSettings || '{}');
-            const hideUsersSettings = pluginSettings.hideUsers;
+            const hideUsersSettings = pluginSettings[pluginName];
 
             if (request.type === 'mute') {
                 if (hideUsersSettings.hidden_ids.indexOf(request.userId) === -1) {
@@ -196,7 +196,7 @@ export default class HideUsers extends Plugin {
             { childList: true, attributes: false, subtree: true },
             (nodes, _) => {
                 const headers = nodes.map(e => {
-                    if (e.querySelectorAll) {
+                    if (e && e.querySelectorAll) {
                         const res = e.querySelectorAll('.c-message__sender_link');
                         if (res.length) {
                             return [...res];

@@ -12,21 +12,29 @@ export default class Plugin {
     public interceptXHR(request, method, path, async) { };
 
     protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
+        this.setIntervileUntil(
+            () => !!document.querySelector(targetQuery),
+            () => {
+                var targetNode = document.querySelector(targetQuery);
+                var observer = new MutationObserver((r, o) => {
+                    const nodes = r.map(r => [...r.addedNodes] as any)
+                        .reduce((a, b) => a.concat(b)) as Node[];
+
+                    fn(nodes, o);
+                });
+                observer.observe(targetNode, observerOptions);
+            })
+    }
+
+    protected setIntervileUntil(fn: () => boolean, callback: () => void) {
         const interval = setInterval(() => {
-            var targetNode = document.querySelector(targetQuery);
-            if (targetNode) {
+            if (fn()) {
                 clearInterval(interval);
             } else {
                 return;
             }
 
-            var observer = new MutationObserver((r, o) => {
-                const nodes = r.map(r => [...r.addedNodes] as any)
-                    .reduce((a, b) => a.concat(b)) as Node[];
-
-                fn(nodes, o);
-            });
-            observer.observe(targetNode, observerOptions);
+            callback();
         }, 200);
     }
 
@@ -69,13 +77,13 @@ export default class Plugin {
 
     private getValue(key: string, namespace?: string) {
         const w = window as any;
-        if(!w.Taut){
+        if (!w.Taut) {
             return undefined;
         }
 
         let source = w.Taut;
-        if(namespace){
-            if(!w.Taut[namespace]){
+        if (namespace) {
+            if (!w.Taut[namespace]) {
                 return undefined;
             }
             source = w.Taut[namespace];

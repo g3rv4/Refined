@@ -19,6 +19,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     hangouts: {
                         enabled: settings.hangout_url && settings.hangout_url.length > 0,
                         url: settings.hangout_url
+                    },
+                    markdownLinks: {
+                        enabled: true
                     }
                 }
             } else {
@@ -30,6 +33,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hangouts: {
                         enabled: false
+                    },
+                    markdownLinks: {
+                        enabled: true
                     }
                 }
             }
@@ -51,7 +57,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         if (potentialClass) {
             request.type = parts[2];
-            potentialClass.ProcessMessage(request, sender);
+            potentialClass.ProcessMessage(request, parts[1], sender);
         }
     }
 });
