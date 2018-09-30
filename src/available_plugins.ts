@@ -8,6 +8,7 @@ import MaintainThreadToChannel from './plugins/maintainThreadToChannel.js';
 import MoveReactions from './plugins/moveReactions.js';
 import HideStatusEmoji from './plugins/hideStatusEmoji.js';
 import HideUrlPreviews from './plugins/hideUrlPreviews.js';
+import HideGDrivePreviews from './plugins/hideGDrivePreviews.js'
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -18,5 +19,6 @@ export default {
     moveReactions: MoveReactions,
     hideStatusEmoji: HideStatusEmoji,
     hideUrlPreviews: HideUrlPreviews,
+    hideGDrivePreviews: HideGDrivePreviews,
 }
 // </sadness>

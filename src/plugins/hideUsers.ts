@@ -1,4 +1,4 @@
-import { InitResponse, MessageTweakerPlugin } from './plugin.js';
+import { InitResponse, MessageTweakerPlugin } from './basePlugin.js';
 
 export default class HideUsers extends MessageTweakerPlugin {
     public init(): InitResponse {

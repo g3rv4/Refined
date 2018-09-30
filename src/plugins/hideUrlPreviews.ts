@@ -1,4 +1,4 @@
-import { MessageTweakerPlugin } from './plugin.js';
+import { MessageTweakerPlugin } from './basePlugin.js';
 
 export default class HideUrlPreviews extends MessageTweakerPlugin {
     protected processXHRMessages(messages: any) {
@@ -16,9 +16,11 @@ export default class HideUrlPreviews extends MessageTweakerPlugin {
     }
 
     protected processWSMessage(data: any) {
-        data.message.attachments = data.message.attachments.filter(m => !m.from_url);
-        if (!data.message.attachments) {
-            delete data.message.attachments;
+        if (data.message && data.message.attachments) {
+            data.message.attachments = data.message.attachments.filter(m => !m.from_url);
+            if (!data.message.attachments) {
+                delete data.message.attachments;
+            }
         }
         return data;
     }

@@ -1,6 +1,6 @@
-import Plugin, { InitResponse } from './plugin.js';
+import BasePlugin, { InitResponse } from './basePlugin.js';
 
-export default class Hangouts extends Plugin {
+export default class Hangouts extends BasePlugin {
     public init(): InitResponse {
         return { interceptXHR: true };
     }

@@ -1,6 +1,6 @@
-import Plugin, { InitResponse } from './plugin.js';
+import BasePlugin, { InitResponse } from './basePlugin.js';
 
-export default class MarkdownLinks extends Plugin {
+export default class MarkdownLinks extends BasePlugin {
     public init(): InitResponse {
         this.setIntervileUntil(
             () => {

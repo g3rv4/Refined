@@ -1,19 +1,19 @@
-import Plugin from './plugins/plugin.js';
+import BasePlugin from './plugins/basePlugin.js';
 import availablePlugins from './available_plugins.js';
 
 const thisScript = document.getElementById('taut-injected-script');
 const settings = JSON.parse(thisScript.dataset.settings);
 
-const wsPlugins: Plugin[] = []; // plugins that mess with websockets
-const xhrPlugins: Plugin[] = []; // plugins that mess with xhr
-const reactPlugins: Plugin[] = []; // plugins that mess with react
+const wsPlugins: BasePlugin[] = []; // plugins that mess with websockets
+const xhrPlugins: BasePlugin[] = []; // plugins that mess with xhr
+const reactPlugins: BasePlugin[] = []; // plugins that mess with react
 
 let css = '';
 const plugins = Object.keys(settings);
 for (let i = 0; i < plugins.length; i++) {
     const pluginName = plugins[i];
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
-        const plugin: Plugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
+        const plugin: BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         const res = plugin.init();
         css += plugin.getCSS();
 

@@ -1,6 +1,6 @@
-import Plugin from './plugin.js';
+import BasePlugin from './basePlugin.js';
 
-export default class HideStatusEmoji extends Plugin {
+export default class HideStatusEmoji extends BasePlugin {
     public getCSS() {
         return `
 .c-custom_status, .message_current_status {

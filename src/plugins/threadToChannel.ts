@@ -1,6 +1,6 @@
-import Plugin, { InitResponse } from './plugin.js';
+import BasePlugin, { InitResponse } from './basePlugin.js';
 
-export default class ThreadToChannel extends Plugin {
+export default class ThreadToChannel extends BasePlugin {
     public init(): InitResponse {
         this.setUpObserver('#convo_tab',
             { attributes: false, childList: true, subtree: true },

@@ -41,6 +41,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hideUrlPreviews: {
                         enabled: !!settings.hide_url_previews
+                    },
+                    hideGDrivePreviews: {
+                        enabled: !!settings.hide_gdrive_preview
                     }
                 }
             } else {
@@ -72,6 +75,9 @@ chrome.runtime.onInstalled.addListener(d => {
                         enabled: false
                     },
                     hideUrlPreviews: {
+                        enabled: false
+                    },
+                    hideGDrivePreviews: {
                         enabled: false
                     }
                 }

@@ -1,6 +1,6 @@
-import Plugin from './plugin.js';
+import BasePlugin from './basePlugin.js';
 
-export default class MoveReactions extends Plugin {
+export default class MoveReactions extends BasePlugin {
     public getCSS() {
         return `
 .c-reaction_bar {

@@ -1,6 +1,6 @@
-import Plugin, { InitResponse } from './plugin.js';
+import BasePlugin, { InitResponse } from './basePlugin.js';
 
-export default class UnreadOnTitle extends Plugin {
+export default class UnreadOnTitle extends BasePlugin {
     public init(): InitResponse {
         this.setUpObserver('title',
             { attributes: true, childList: true, subtree: true },

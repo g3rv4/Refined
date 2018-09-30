@@ -4,7 +4,7 @@ export interface InitResponse {
     interceptReact?: boolean
 }
 
-export default abstract class Plugin {
+export default abstract class BasePlugin {
     protected settings: any;
     protected name: string;
 
@@ -100,7 +100,7 @@ export default abstract class Plugin {
     }
 }
 
-export abstract class MessageTweakerPlugin extends Plugin {
+export abstract class MessageTweakerPlugin extends BasePlugin {
     public init(): InitResponse {
         return {
             interceptXHR: true,
