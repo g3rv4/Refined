@@ -123,18 +123,6 @@ chrome.storage.sync.get(['acceptedRisks', 'pluginSettings'], res => {
 //             }
 //         });
 
-//         if (settings.threads_on_channel) {
-//             // always reply to the channel... TODO: Don't use DOMNodeInserted
-//             document.addEventListener('DOMNodeInserted', function (e) {
-//                 const cl = (e.target as any).classList;
-//                 if (cl && cl.contains('reply_container_info')) {
-//                     [...document.getElementsByClassName('reply_broadcast_toggle')].forEach(el => {
-//                         (el as any).checked = true;
-//                     });
-//                 }
-//             });
-//         }
-
 //         let css = `
 // `;
 //         if (settings.hide_status_emoji) {
@@ -171,18 +159,4 @@ chrome.storage.sync.get(['acceptedRisks', 'pluginSettings'], res => {
 //         (document.head || document.getElementsByTagName('head')[0]).appendChild(sheet);
 //         sheet.appendChild(document.createTextNode(css));
 
-//         if (settings.unread_on_title) {
-//             // Avoid adding * or ! on the title
-//             var targetNode = document.querySelector('title')
-//             var config = { attributes: true, childList: true, subtree: true };
-//             var callback = function () {
-//                 if (document.title.startsWith('*') || document.title.startsWith('!')) {
-//                     document.title = document.title.substring(2);
-//                 }
-//             };
-//             var observer = new MutationObserver(callback);
-//             observer.observe(targetNode, config);
-//         }
-
-//     }, JSON.stringify(res.settings));
 });

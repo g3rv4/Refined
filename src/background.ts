@@ -26,6 +26,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     unreadOnTitle: {
                         enabled: !!settings.unread_on_title
+                    },
+                    threadToChannel: {
+                        enabled: !!settings.threads_on_channel
                     }
                 }
             } else {
@@ -43,6 +46,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     unreadOnTitle: {
                         enabled: true
+                    },
+                    threadToChannel: {
+                        enabled: false
                     }
                 }
             }
