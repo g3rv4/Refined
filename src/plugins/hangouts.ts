@@ -3,8 +3,8 @@ import Plugin from './plugin.js';
 export default class Hangouts extends Plugin {
     private userIdRegex: RegExp;
 
-    public constructor(settings: any) {
-        super(settings);
+    public constructor(name: string, settings: any) {
+        super(name, settings);
         this.userIdRegex = /<@([^>]+)>/g;
     }
 

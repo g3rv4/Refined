@@ -1,4 +1,5 @@
 import Plugin from './plugins/plugin.js';
+import availablePlugins from './available_plugins.js';
 
 const thisScript = document.getElementById('taut-injected-script');
 const settings = JSON.parse(thisScript.dataset.settings);
@@ -6,20 +7,11 @@ const settings = JSON.parse(thisScript.dataset.settings);
 const wsPlugins: Plugin[] = []; // plugins that mess with websockets
 const xhrPlugins: Plugin[] = []; // plugins that mess with xhr
 
-// ugh, while Firefox doesn't implement dynamic module loading, this is going to make me sad
-import HideUsers from './plugins/hideUsers.js';
-import Hangouts from './plugins/hangouts.js';
-const availablePlugins = {
-    hideUsers: HideUsers,
-    hangouts: Hangouts
-}
-// </sadness>
-
 const plugins = Object.keys(settings);
 for (let i = 0; i < plugins.length; i++) {
     const pluginName = plugins[i];
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
-        const plugin = new availablePlugins[pluginName](settings[pluginName]);
+        const plugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         plugin.init(wsPlugins, xhrPlugins);
     }
 }

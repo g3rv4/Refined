@@ -37,11 +37,13 @@
             "run_at": "document_start"
         }
     ],
-    "web_accessible_resources": ["injected_script.js", "plugins/*"],
+    "web_accessible_resources": [
+        "injected_script.js",
+        "available_plugins.js",
+        "plugins/*"
+    ],
     "background": {
-        "scripts": [
-            "background.js"
-        ]
+        "page": "background.html"
     },
     "permissions": [
         "storage",
