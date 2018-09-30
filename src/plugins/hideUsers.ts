@@ -1,6 +1,6 @@
-import Plugin, { InitResponse } from './plugin.js';
+import { InitResponse, MessageTweakerPlugin } from './plugin.js';
 
-export default class HideUsers extends Plugin {
+export default class HideUsers extends MessageTweakerPlugin {
     public init(): InitResponse {
         this.observeThings();
 
@@ -10,32 +10,7 @@ export default class HideUsers extends Plugin {
         };
     }
 
-    public interceptXHR(request, method, path, async) {
-        let oldListener = _ => { };
-        if (request.onreadystatechange) {
-            oldListener = request.onreadystatechange.bind(this);
-        }
-
-        if (path === '/api/conversations.view' || path.startsWith('/api/conversations.history')) {
-            request.onreadystatechange = e => {
-                if (request.readyState == 4) {
-                    this.processConversations(request);
-                }
-                oldListener(e);
-            }
-        }
-    }
-
-    public processWebSocketData(data: any) {
-        if (data.type === "message") {
-            if (this.settings.hidden_ids.indexOf(data.user) !== -1 || this.settings.hidden_ids.indexOf(data.bot_id) !== -1) {
-                data = {};
-            }
-        }
-        return data;
-    }
-
-    static ProcessMessage(request: any, pluginName: string, sender: chrome.runtime.MessageSender) {
+    static ProcessExtensionMessage(request: any, pluginName: string, sender: chrome.runtime.MessageSender) {
         // this runs on the background thread
         chrome.storage.sync.get(['pluginSettings'], res => {
             const pluginSettings = JSON.parse(res.pluginSettings || '{}');
@@ -58,21 +33,15 @@ export default class HideUsers extends Plugin {
         })
     }
 
-    private filterMessages(messages) {
+    protected processXHRMessages(messages) {
         return messages.filter(m => this.settings.hidden_ids.indexOf(m.bot_id) === -1 && this.settings.hidden_ids.indexOf(m.user) === -1);
     }
 
-    private processConversations(request) {
-        const data = JSON.parse(request.responseText);
-
-        if (data.ok) {
-            if (data.history && data.history.messages) {
-                data.history.messages = this.filterMessages(data.history.messages);
-            } else if (data.messages) {
-                data.messages = this.filterMessages(data.messages);
-            }
-            request.bindResponse(JSON.stringify(data));
+    protected processWSMessage(message) {
+        if (this.settings.hidden_ids.indexOf(message.user) !== -1 || this.settings.hidden_ids.indexOf(message.bot_id) !== -1) {
+            message = {};
         }
+        return message;
     }
 
     private observeThings() {

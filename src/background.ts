@@ -38,6 +38,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hideStatusEmoji: {
                         enabled: !!settings.hide_status_emoji
+                    },
+                    hideUrlPreviews: {
+                        enabled: !!settings.hide_url_previews
                     }
                 }
             } else {
@@ -67,6 +70,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hideStatusEmoji: {
                         enabled: false
+                    },
+                    hideUrlPreviews: {
+                        enabled: false
                     }
                 }
             }
@@ -88,7 +94,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         if (potentialClass) {
             request.type = parts[2];
-            potentialClass.ProcessMessage(request, parts[1], sender);
+            potentialClass.ProcessExtensionMessage(request, parts[1], sender);
         }
     }
 });

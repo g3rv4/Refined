@@ -4,7 +4,7 @@ export interface InitResponse {
     interceptReact?: boolean
 }
 
-export default class Plugin {
+export default abstract class Plugin {
     protected settings: any;
     protected name: string;
 
@@ -14,7 +14,7 @@ export default class Plugin {
     }
 
     public init(): InitResponse { return {}; };
-    public processWebSocketData(data: any) { return data; }
+    public interceptWS(data: any) { return data; }
     public interceptXHR(request, method, path, async) { };
     public interceptReact(displayName, props) { return props; };
     public getCSS() { return ''; }
@@ -97,5 +97,53 @@ export default class Plugin {
             source = w.Taut[namespace];
         }
         return source[key];
+    }
+}
+
+export abstract class MessageTweakerPlugin extends Plugin {
+    public init(): InitResponse {
+        return {
+            interceptXHR: true,
+            interceptWS: true
+        };
+    }
+
+    protected abstract processXHRMessages(messages: any[]): any[];
+    protected abstract processWSMessage(message: any): any;
+
+    public interceptXHR(request, method, path, async) {
+        let oldListener = _ => { };
+        if (request.onreadystatechange) {
+            oldListener = request.onreadystatechange.bind(this);
+        }
+
+        if (path === '/api/conversations.view' || path.startsWith('/api/conversations.history')) {
+            request.onreadystatechange = e => {
+                if (request.readyState == 4) {
+                    this.processConversations(request);
+                }
+                oldListener(e);
+            }
+        }
+    }
+
+    public interceptWS(data: any) {
+        if (data.type === "message") {
+            data = this.processWSMessage(data);
+        }
+        return data;
+    }
+
+    private processConversations(request) {
+        const data = JSON.parse(request.responseText);
+
+        if (data.ok) {
+            if (data.history && data.history.messages) {
+                data.history.messages = this.processXHRMessages(data.history.messages);
+            } else if (data.messages) {
+                data.messages = this.processXHRMessages(data.messages);
+            }
+            request.bindResponse(JSON.stringify(data));
+        }
     }
 }

@@ -13,7 +13,7 @@ export default class UnreadOnTitle extends Plugin {
         return { interceptWS: true, interceptReact: true };
     }
 
-    public processWebSocketData(data: any) {
+    public interceptWS(data: any) {
         if (data.type === "message") {
             const slackModel = this.getSlackModel();
             if (data.channel == slackModel.active_channel_id && data.user != slackModel.user.id) {

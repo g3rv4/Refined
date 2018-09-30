@@ -75,7 +75,7 @@ if (wsPlugins.length) {
                 let data = JSON.parse(event.data);
 
                 for (let i = 0; i < wsPlugins.length; i++) {
-                    data = wsPlugins[i].processWebSocketData(data);
+                    data = wsPlugins[i].interceptWS(data);
                 }
 
                 bindWebSocketData(event, JSON.stringify(data));
