@@ -29,6 +29,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     threadToChannel: {
                         enabled: !!settings.threads_on_channel
+                    },
+                    maintainThreadToChannel: {
+                        enabled: true
                     }
                 }
             } else {
@@ -49,6 +52,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     threadToChannel: {
                         enabled: false
+                    },
+                    maintainThreadToChannel: {
+                        enabled: true
                     }
                 }
             }

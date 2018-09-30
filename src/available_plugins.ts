@@ -4,11 +4,13 @@ import Hangouts from './plugins/hangouts.js';
 import MarkdownLinks from './plugins/markdownLinks.js';
 import UnreadOnTitle from './plugins/unreadOnTitle.js';
 import ThreadToChannel from './plugins/threadToChannel.js';
+import MaintainThreadToChannel from './plugins/maintainThreadToChannel.js';
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
     markdownLinks: MarkdownLinks,
     unreadOnTitle: UnreadOnTitle,
     threadToChannel: ThreadToChannel,
+    maintainThreadToChannel: MaintainThreadToChannel
 }
 // </sadness>
