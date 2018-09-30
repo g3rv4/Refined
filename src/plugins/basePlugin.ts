@@ -51,6 +51,12 @@ export default abstract class BasePlugin {
         return w.TS.model;
     }
 
+    protected getTeamId() {
+        const w = window as any;
+        return w.TS.boot_data.team_id; // this is available super early, which is useful to process messages
+                                       // since they're processed before window.TS.model.team has a value
+    }
+
     protected setLocalValue(key: string, value: any) {
         this.setValue(key, value, this.name);
     }

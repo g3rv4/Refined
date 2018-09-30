@@ -15,10 +15,10 @@ chrome.runtime.onInstalled.addListener(d => {
                 pluginSettings = {
                     hideUsers: {
                         enabled: true,
-                        hidden_ids: settings.hidden_ids ? settings.hidden_ids.split(",").map(s => s.trim()) : []
+                        hidden_ids: settings.hidden_ids ? settings.hidden_ids.split(",").map(s => `*.${s.trim()}`) : []
                     },
                     hangouts: {
-                        enabled: settings.hangout_url && settings.hangout_url.length > 0,
+                        enabled: !!(settings.hangout_url && settings.hangout_url.length > 0),
                         url: settings.hangout_url
                     },
                     markdownLinks: {

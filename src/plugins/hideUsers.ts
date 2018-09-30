@@ -1,6 +1,17 @@
 import { InitResponse, MessageTweakerPlugin } from './basePlugin.js';
 
 export default class HideUsers extends MessageTweakerPlugin {
+    private _hidden_ids: string[];
+
+    private get hidden_ids(): string[] {
+        if (!this._hidden_ids) {
+            const teamId = this.getTeamId();
+            this._hidden_ids = this.settings.hidden_ids.filter(i => i.startsWith('*.') || i.startsWith(`${teamId}.`))
+                .map(i => i.split('.').pop());
+        }
+        return this._hidden_ids;
+    }
+
     public init(): InitResponse {
         this.observeThings();
 
@@ -20,8 +31,13 @@ export default class HideUsers extends MessageTweakerPlugin {
                 if (hideUsersSettings.hidden_ids.indexOf(request.userId) === -1) {
                     hideUsersSettings.hidden_ids.push(request.userId);
                 }
-            } else if (request.type === 'unmute') {
+            } else if (request.type === 'unmute' && request.userIds && request.userIds.length) {
+                // unmute exact users (those that are qualified by a team id)
                 hideUsersSettings.hidden_ids = hideUsersSettings.hidden_ids.filter(i => request.userIds.indexOf(i) === -1);
+
+                // unmute generic mutes (from v1)
+                const genericUserIds = request.userIds.map(i => '*.' + i.split('.').pop());
+                hideUsersSettings.hidden_ids = hideUsersSettings.hidden_ids.filter(i => genericUserIds.indexOf(i) === -1);
             }
 
             var json = JSON.stringify(pluginSettings);
@@ -34,11 +50,11 @@ export default class HideUsers extends MessageTweakerPlugin {
     }
 
     protected processXHRMessages(messages) {
-        return messages.filter(m => this.settings.hidden_ids.indexOf(m.bot_id) === -1 && this.settings.hidden_ids.indexOf(m.user) === -1);
+        return messages.filter(m => this.hidden_ids.indexOf(m.bot_id) === -1 && this.hidden_ids.indexOf(m.user) === -1);
     }
 
     protected processWSMessage(message) {
-        if (this.settings.hidden_ids.indexOf(message.user) !== -1 || this.settings.hidden_ids.indexOf(message.bot_id) !== -1) {
+        if (this.hidden_ids.indexOf(message.user) !== -1 || this.hidden_ids.indexOf(message.bot_id) !== -1) {
             message = {};
         }
         return message;
@@ -50,13 +66,13 @@ export default class HideUsers extends MessageTweakerPlugin {
     }
 
     private addUnmuteActionToPreferences() {
-        const hidden_ids = this.settings.hidden_ids;
         this.setUpObserver("body",
             { childList: true, attributes: false, subtree: false },
             (nodes, _) => {
                 const modal = nodes.filter(r => r.id === 'fs_modal')[0];
                 if (modal) {
                     // add an observer to the contents_container element
+                    const hidden_ids = this.hidden_ids;
                     const target = modal.querySelector('.contents');
                     if (target) {
                         const contentObserver = new MutationObserver(async (records, _) => {
@@ -94,6 +110,7 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                                 const userIds = users.map(m => m.id);
                                 const botIds = bots.map(b => b.id);
+                                const teamId = this.getTeamId();
 
                                 hidden_ids.forEach(userId => {
                                     let muted = undefined;
@@ -115,7 +132,7 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                                         const input = document.createElement('input');
                                         input.value = "1";
-                                        input.name = muted.id;
+                                        input.name = `${teamId}.${muted.id}`;
                                         input.type = 'checkbox';
                                         current.appendChild(input);
 
@@ -178,12 +195,13 @@ export default class HideUsers extends MessageTweakerPlugin {
                     .filter(e => e)
                     .reduce((a, b) => a.concat(b), []);
 
+                const teamId = this.getSlackModel().team.id;
                 headers.forEach(h => {
                     if (!h.dataset.taut) {
                         h.dataset.taut = "1";
                         h.onclick = e => {
                             const userId = e.target.href.split('/').pop();
-                            this.setLocalValue('last_clicked', userId);
+                            this.setLocalValue('last_clicked', `${teamId}.${userId}`);
                         }
                     }
                 })
@@ -194,13 +212,14 @@ export default class HideUsers extends MessageTweakerPlugin {
             { childList: true, attributes: false, subtree: false },
             (nodes, _) => {
                 const menu = nodes.filter(n => n.id === 'menu')[0];
+                const lastClicked = this.getLocalValue('last_clicked');
 
-                if (menu) {
+                if (menu && !lastClicked.endsWith(`.${this.getSlackModel().user.id}`)) {
                     const li: any = document.createElement('li');
                     const a = document.createElement('a');
                     a.innerText = "Mute";
                     a.onclick = _ => {
-                        const userId = this.getLocalValue('last_clicked');
+                        const userId = lastClicked;
                         window.postMessage({
                             type: `taut.${this.name}.mute`,
                             userId
