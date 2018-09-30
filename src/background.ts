@@ -35,6 +35,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     moveReactions: {
                         enabled: !!settings.reactions_on_the_right
+                    },
+                    hideStatusEmoji: {
+                        enabled: !!settings.hide_status_emoji
                     }
                 }
             } else {
@@ -60,6 +63,9 @@ chrome.runtime.onInstalled.addListener(d => {
                         enabled: true
                     },
                     moveReactions: {
+                        enabled: false
+                    },
+                    hideStatusEmoji: {
                         enabled: false
                     }
                 }

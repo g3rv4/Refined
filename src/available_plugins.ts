@@ -6,6 +6,7 @@ import UnreadOnTitle from './plugins/unreadOnTitle.js';
 import ThreadToChannel from './plugins/threadToChannel.js';
 import MaintainThreadToChannel from './plugins/maintainThreadToChannel.js';
 import MoveReactions from './plugins/moveReactions.js';
+import HideStatusEmoji from './plugins/hideStatusEmoji.js';
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -14,5 +15,6 @@ export default {
     threadToChannel: ThreadToChannel,
     maintainThreadToChannel: MaintainThreadToChannel,
     moveReactions: MoveReactions,
+    hideStatusEmoji: HideStatusEmoji,
 }
 // </sadness>
