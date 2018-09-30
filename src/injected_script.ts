@@ -8,12 +8,14 @@ const wsPlugins: Plugin[] = []; // plugins that mess with websockets
 const xhrPlugins: Plugin[] = []; // plugins that mess with xhr
 const reactPlugins: Plugin[] = []; // plugins that mess with react
 
+let css = '';
 const plugins = Object.keys(settings);
 for (let i = 0; i < plugins.length; i++) {
     const pluginName = plugins[i];
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
         const plugin: Plugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         const res = plugin.init();
+        css += plugin.getCSS();
 
         if (res.interceptXHR) {
             xhrPlugins.push(plugin);
@@ -28,6 +30,14 @@ for (let i = 0; i < plugins.length; i++) {
 }
 
 const w: any = window;
+if (css) {
+    var sheet = document.createElement('style');
+    sheet.type = 'text/css';
+    w.customSheet = sheet;
+    (document.head || document.getElementsByTagName('head')[0]).appendChild(sheet);
+    sheet.appendChild(document.createTextNode(css));
+}
+
 if (xhrPlugins.length) {
     var proxied = w.XMLHttpRequest.prototype.open;
     w.XMLHttpRequest.prototype.open = function (method, path, async) {

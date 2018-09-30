@@ -32,6 +32,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     maintainThreadToChannel: {
                         enabled: true
+                    },
+                    moveReactions: {
+                        enabled: !!settings.reactions_on_the_right
                     }
                 }
             } else {
@@ -55,6 +58,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     maintainThreadToChannel: {
                         enabled: true
+                    },
+                    moveReactions: {
+                        enabled: false
                     }
                 }
             }

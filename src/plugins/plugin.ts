@@ -17,6 +17,7 @@ export default class Plugin {
     public processWebSocketData(data: any) { return data; }
     public interceptXHR(request, method, path, async) { };
     public interceptReact(displayName, props) { return props; };
+    public getCSS() { return ''; }
 
     protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
         this.setIntervileUntil(
