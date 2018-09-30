@@ -1,10 +1,13 @@
-import Plugin from './plugin.js';
+import Plugin, { InitResponse } from './plugin.js';
 
 export default class HideUsers extends Plugin {
-    public init(wsPlugins: Plugin[], xhrPlugins: Plugin[]): void {
-        wsPlugins.push(this);
-        xhrPlugins.push(this);
+    public init(): InitResponse {
         this.observeThings();
+
+        return {
+            interceptXHR: true,
+            interceptWS: true
+        };
     }
 
     public interceptXHR(request, method, path, async) {
@@ -275,9 +278,10 @@ export default class HideUsers extends Plugin {
                     div2.innerText = 'Mute';
 
                     const items = reactModal.querySelector('.c-menu__items');
-                    const secondDivider = items.querySelectorAll('.c-menu_separator__li')[1];
-
-                    items.insertBefore(div, secondDivider)
+                    if (items) {
+                        const secondDivider = items.querySelectorAll('.c-menu_separator__li')[1];
+                        items.insertBefore(div, secondDivider)
+                    }
                 }
             }
         )

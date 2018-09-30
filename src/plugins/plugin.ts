@@ -1,3 +1,9 @@
+export interface InitResponse {
+    interceptWS?: boolean,
+    interceptXHR?: boolean,
+    interceptReact?: boolean
+}
+
 export default class Plugin {
     protected settings: any;
     protected name: string;
@@ -7,9 +13,10 @@ export default class Plugin {
         this.settings = settings;
     }
 
-    public init(wsPlugins: Plugin[], xhrPlugins: Plugin[]): void { };
+    public init(): InitResponse { return {}; };
     public processWebSocketData(data: any) { return data; }
     public interceptXHR(request, method, path, async) { };
+    public interceptReact(displayName, props) { return props; };
 
     protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
         this.setIntervileUntil(

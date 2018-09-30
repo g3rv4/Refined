@@ -6,13 +6,24 @@ const settings = JSON.parse(thisScript.dataset.settings);
 
 const wsPlugins: Plugin[] = []; // plugins that mess with websockets
 const xhrPlugins: Plugin[] = []; // plugins that mess with xhr
+const reactPlugins: Plugin[] = []; // plugins that mess with react
 
 const plugins = Object.keys(settings);
 for (let i = 0; i < plugins.length; i++) {
     const pluginName = plugins[i];
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
-        const plugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
-        plugin.init(wsPlugins, xhrPlugins);
+        const plugin: Plugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
+        const res = plugin.init();
+
+        if (res.interceptXHR) {
+            xhrPlugins.push(plugin);
+        }
+        if (res.interceptWS) {
+            wsPlugins.push(plugin);
+        }
+        if (res.interceptReact) {
+            reactPlugins.push(plugin);
+        }
     }
 }
 
@@ -69,4 +80,35 @@ if (wsPlugins.length) {
 
     // replace the native WebSocket with the proxy
     w.WebSocket = WebSocketProxy;
+}
+
+if (reactPlugins.length) {
+    const reactInterval = setInterval(() => {
+        const w = window as any;
+        if (w.React && w.React.createElement) {
+            clearInterval(reactInterval);
+        } else {
+            return;
+        }
+
+        // Store the original function
+        const originalCreateElement = w.React.createElement;
+
+        // Define a new function
+        w.React.createElement = function () {
+            // Get our arguments as an array
+            const args = Array.prototype.slice.call(arguments);
+
+            const displayName = args[0].displayName;
+            if (displayName) {
+                let props = args[1];
+                for (let i = 0; i < reactPlugins.length; i++) {
+                    props = reactPlugins[i].interceptReact(displayName, props);
+                }
+                args[1] = props;
+            }
+
+            return originalCreateElement.apply(w.React, args);
+        };
+    }, 100);
 }

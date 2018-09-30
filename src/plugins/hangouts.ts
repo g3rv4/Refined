@@ -1,8 +1,8 @@
-import Plugin from './plugin.js';
+import Plugin, { InitResponse } from './plugin.js';
 
 export default class Hangouts extends Plugin {
-    public init(wsPlugins: Plugin[], xhrPlugins: Plugin[]): void {
-        xhrPlugins.push(this);
+    public init(): InitResponse {
+        return { interceptXHR: true };
     }
 
     public interceptXHR(request, method, path, async) {

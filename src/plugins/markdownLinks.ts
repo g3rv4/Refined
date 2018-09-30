@@ -1,9 +1,7 @@
-import Plugin from './plugin.js';
+import Plugin, { InitResponse } from './plugin.js';
 
 export default class MarkdownLinks extends Plugin {
-    public init(wsPlugins: Plugin[], xhrPlugins: Plugin[]): void {
-        xhrPlugins.push(this);
-
+    public init(): InitResponse {
         this.setIntervileUntil(
             () => {
                 const w = window as any;
@@ -19,7 +17,9 @@ export default class MarkdownLinks extends Plugin {
                     return old(t, n, r);
                 }
             }
-        )
+        );
+
+        return { interceptXHR: true };
     }
 
     public interceptXHR(request, method, path, async) {

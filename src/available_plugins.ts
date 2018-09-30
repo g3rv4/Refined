@@ -2,9 +2,11 @@
 import HideUsers from './plugins/hideUsers.js';
 import Hangouts from './plugins/hangouts.js';
 import MarkdownLinks from './plugins/markdownLinks.js';
+import UnreadOnTitle from './plugins/unreadOnTitle.js';
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
     markdownLinks: MarkdownLinks,
+    unreadOnTitle: UnreadOnTitle,
 }
 // </sadness>

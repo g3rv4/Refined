@@ -6,6 +6,7 @@ chrome.runtime.onInstalled.addListener(d => {
             chrome.tabs.create({ url: chrome.extension.getURL('options.html') + '?fullpage=1' });
         }
 
+        debugger;
         if (!res.pluginSettings) {
             let pluginSettings = {};
             if (res.settings) {
@@ -22,6 +23,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     markdownLinks: {
                         enabled: true
+                    },
+                    unreadOnTitle: {
+                        enabled: !!settings.unread_on_title
                     }
                 }
             } else {
@@ -35,6 +39,9 @@ chrome.runtime.onInstalled.addListener(d => {
                         enabled: false
                     },
                     markdownLinks: {
+                        enabled: true
+                    },
+                    unreadOnTitle: {
                         enabled: true
                     }
                 }
