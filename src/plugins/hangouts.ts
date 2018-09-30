@@ -5,6 +5,16 @@ export default class Hangouts extends BasePlugin {
         return { interceptXHR: true };
     }
 
+    public static GenerateSettingsFromForm(current: any, newSettings: any) {
+        if (newSettings.url) {
+            return {
+                enabled: true,
+                url: newSettings.url
+            };
+        }
+        return { enabled: false };
+    }
+
     public interceptXHR(request, method, path, async) {
         if (this.settings.url && (path.startsWith('/api/chat.postMessage') || path.startsWith('/api/chat.update'))) {
             const oldSend = request.send.bind(request);
@@ -21,7 +31,8 @@ export default class Hangouts extends BasePlugin {
                     var name = text.substring(8);
                     var url;
 
-                    while (match = /<@([^>]+)>/g.exec(name)) {
+                    const re = /<@([^>]+)>/g;
+                    while (match = re.exec(name)) {
                         userIds.push(match[1]);
                     }
 

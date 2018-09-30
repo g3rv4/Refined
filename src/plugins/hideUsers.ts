@@ -230,7 +230,6 @@ export default class HideUsers extends MessageTweakerPlugin {
                     const items = menu.querySelector('#menu_items');
                     const firstDivider = items.querySelector('.divider');
                     items.insertBefore(li, firstDivider);
-                    this.setLocalValue('last_clicked', undefined);
                 }
             });
 

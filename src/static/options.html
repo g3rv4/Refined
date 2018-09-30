@@ -53,40 +53,44 @@ th {
             </tbody>
             <tbody class="hide-before-accepting">
                 <tr>
-                    <th><label for="hidden_ids">Hidden users (include their ids)</label></th>
-                    <td><input type="text" name="hidden_ids" id="hidden_ids" /></td>
+                    <th><label for="hangouts.url">Hangout url (use $name$ as placeholder)</label></th>
+                    <td><input type="text" name="hangouts.url" id="hangouts.url" /></td>
                 </tr>
                 <tr>
-                    <th><label for="hangout_url">Hangout url (use $name$ as placeholder)</label></th>
-                    <td><input type="text" name="hangout_url" id="hangout_url" /></td>
+                    <th><label for="hideUsers.enabled">Mute users</label></th>
+                    <td><input type="checkbox" name="hideUsers.enabled" id="hideUsers.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="unread_on_title">Show unread messages count on title</label></th>
-                    <td><input type="checkbox" name="unread_on_title" id="unread_on_title" value="1" /></td>
+                    <th><label for="markdownLinks.enabled">Enable markdown links</label></th>
+                    <td><input type="checkbox" name="markdownLinks.enabled" id="markdownLinks.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="reactions_on_the_right">Move reactions to the right</label></th>
-                    <td><input type="checkbox" name="reactions_on_the_right" id="reactions_on_the_right" value="1" /></td>
+                    <th><label for="unreadOnTitle.enabled">Show unread messages count on title</label></th>
+                    <td><input type="checkbox" name="unreadOnTitle.enabled" id="unreadOnTitle.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="threads_on_channel">Threads on channel by default</label></th>
-                    <td><input type="checkbox" name="threads_on_channel" id="threads_on_channel" value="1" /></td>
+                    <th><label for="moveReactions.enabled">Move reactions to the right</label></th>
+                    <td><input type="checkbox" name="moveReactions.enabled" id="moveReactions.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="hide_gdrive_preview">Disable Google Drive previews</label></th>
-                    <td><input type="checkbox" name="hide_gdrive_preview" id="hide_gdrive_preview" value="1" /></td>
+                    <th><label for="threadToChannel.enabled">Threads on channel by default</label></th>
+                    <td><input type="checkbox" name="threadToChannel.enabled" id="threadToChannel.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="hide_url_previews">Disable Url previews</label></th>
-                    <td><input type="checkbox" name="hide_url_previews" id="hide_url_previews" value="1" /></td>
+                    <th><label for="maintainThreadToChannel.enabled">Make threads on channel sticky</label></th>
+                    <td><input type="checkbox" name="maintainThreadToChannel.enabled" id="maintainThreadToChannel.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="hide_status_emoji">Hide status emoji</label></th>
-                    <td><input type="checkbox" name="hide_status_emoji" id="hide_status_emoji" value="1" /></td>
+                    <th><label for="hideGDrivePreviews.enabled">Disable Google Drive previews</label></th>
+                    <td><input type="checkbox" name="hideGDrivePreviews.enabled" id="hideGDrivePreviews.enabled" value="1" /></td>
                 </tr>
                 <tr>
-                    <th><label for="only_my_reactions">Only show your reactions or reactions to your messages</label></th>
-                    <td><input type="checkbox" name="only_my_reactions" id="only_my_reactions" value="1" /></td>
+                    <th><label for="hideUrlPreviews.enabled">Disable Url previews</label></th>
+                    <td><input type="checkbox" name="hideUrlPreviews.enabled" id="hideUrlPreviews.enabled" value="1" /></td>
+                </tr>
+                <tr>
+                    <th><label for="hideStatusEmoji.enabled">Hide status emoji</label></th>
+                    <td><input type="checkbox" name="hideStatusEmoji.enabled" id="hideStatusEmoji.enabled" value="1" /></td>
                 </tr>
             </tbody>
             <tbody class="hide-popup hide-before-accepting">
@@ -133,7 +137,7 @@ th {
             </tbody>
         </table>
     </form>
-    <script src="options.js"></script>
+    <script type="module" src="options.js"></script>
 </body>
 
 </html>

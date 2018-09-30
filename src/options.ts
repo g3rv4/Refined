@@ -1,3 +1,5 @@
+import availablePlugins from './available_plugins.js';
+
 const reloadSlackTabs = (callback?: () => void) => {
     chrome.tabs.query({ url: 'https://*.slack.com/*' }, tabs => {
         let tabsRemaining = tabs.length;
@@ -19,16 +21,34 @@ form.addEventListener('submit', e => {
     e.preventDefault();
 
     var formData = new FormData(form as HTMLFormElement);
-    var object: any = {};
+    var newSettings: any = {};
     formData.forEach(function (value, key) {
-        object[key] = value;
+        const parts = key.split('.');
+        const lastKey = parts.pop();
+        let current = newSettings;
+        for (let currentKey of parts) {
+            if (!current[currentKey]) {
+                current[currentKey] = {};
+            }
+            current = current[currentKey];
+        }
+        current[lastKey] = value;
     });
 
-    var json = JSON.stringify(object);
+    chrome.storage.sync.get(['acceptedRisks', 'pluginSettings'], res => {
+        let currentSettings = JSON.parse(res.pluginSettings || '{}');
 
-    chrome.storage.sync.set({
-        'settings': json
-    }, () => reloadSlackTabs(closePopup));
+        const plugins = Object.keys(availablePlugins);
+        for (let pluginName of plugins) {
+            newSettings[pluginName] = availablePlugins[pluginName].GenerateSettingsFromForm(currentSettings[pluginName], newSettings[pluginName]);
+        }
+
+        var json = JSON.stringify(newSettings);
+
+        chrome.storage.sync.set({
+            'pluginSettings': json
+        }, () => reloadSlackTabs(closePopup));
+    });
 });
 
 document.querySelectorAll('.visit-site').forEach(e => {
@@ -70,7 +90,7 @@ accept.addEventListener('click', e => {
 
 
 setTimeout(() => {
-    chrome.storage.sync.get(['acceptedRisks', 'settings'], res => {
+    chrome.storage.sync.get(['acceptedRisks', 'pluginSettings'], res => {
         const html = document.querySelector('html');
         if (res.acceptedRisks) {
             html.classList.add('accepted');
@@ -79,21 +99,20 @@ setTimeout(() => {
         }
         html.classList.remove('loading');
 
-        const settings = JSON.parse(res.settings || '{}');
+        const settings = JSON.parse(res.pluginSettings || '{}');
 
-        let e: any = document.getElementById('hidden_ids');
-        e.value = settings.hidden_ids || "";
-
-        e = document.getElementById('hangout_url');
-        e.value = settings.hangout_url || "";
-
-        ['only_my_reactions', 'hide_gdrive_preview', 'threads_on_channel',
-            'hide_status_emoji', 'reactions_on_the_right', 'hide_url_previews',
-            'unread_on_title'].forEach(f => {
-                if (settings[f]) {
-                    document.getElementById(f).setAttribute('checked', 'true');
+        for (let pluginName of Object.keys(settings)) {
+            for (let key of Object.keys(settings[pluginName])) {
+                const elem = document.getElementById(`${pluginName}.${key}`) as HTMLInputElement;
+                if (elem) {
+                    if (elem.type === 'checkbox') {
+                        elem.checked = !!settings[pluginName][key];
+                    } else {
+                        elem.value = settings[pluginName][key];
+                    }
                 }
-            })
+            }
+        }
     })
 }, 100)
 

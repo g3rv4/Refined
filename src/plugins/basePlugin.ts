@@ -19,6 +19,13 @@ export default abstract class BasePlugin {
     public interceptReact(displayName, props) { return props; };
     public getCSS() { return ''; }
 
+    // this can be used by the plugins that only need an enable/disable switch
+    public static GenerateSettingsFromForm(current: any, newSettings: any){
+        current = current || {};
+        current.enabled = !!newSettings && newSettings.enabled === "1";
+        return current;
+    }
+
     protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
         this.setIntervileUntil(
             () => !!document.querySelector(targetQuery),

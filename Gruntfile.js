@@ -34,7 +34,7 @@ module.exports = function (grunt) {
             },
             ts: {
                 files: 'dist/ff/**/*',
-                tasks: ['copy:chromeOpera', 'fix-chromeOpera']
+                tasks: ['copy:chromeOpera', 'fix-chrome-opera']
             }
         },
         concurrent: {
