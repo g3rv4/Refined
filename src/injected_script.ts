@@ -45,7 +45,7 @@ if (xhrPlugins.length) {
             xhrPlugins[i].interceptXHR(this, method, path, async);
         }
 
-        this.bindResponse = (response) => {
+        this.bindResponse = response => {
             this.__defineGetter__("responseText", function () {
                 return response
             });

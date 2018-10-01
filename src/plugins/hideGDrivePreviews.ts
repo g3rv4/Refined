@@ -21,7 +21,8 @@ export default class HideGDrivePreviews extends MessageTweakerPlugin {
         return messages;
     }
 
-    protected processWSMessage(message: any) {
+    protected processWSMessage(data: any) {
+        const message = data.message ? data.message : data;
         if (message.files) {
             if (!message.text) {
                 // write the docs urls instead
@@ -35,6 +36,6 @@ export default class HideGDrivePreviews extends MessageTweakerPlugin {
             }
         }
 
-        return message;
+        return data;
     }
 }
