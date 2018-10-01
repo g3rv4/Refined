@@ -148,7 +148,7 @@ export default class HideUsers extends MessageTweakerPlugin {
                                     const btn = document.createElement('button');
                                     btn.type = 'submit';
                                     btn.className = 'btn btn_outline ladda-button';
-                                    btn.innerText = 'Unmute the selected users';
+                                    btn.innerText = 'Unmute selected users';
                                     form.appendChild(btn);
 
                                     form.appendChild(document.createElement('hr'));
