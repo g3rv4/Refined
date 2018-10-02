@@ -1,6 +1,6 @@
 {
   "name": "taut",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Chrome extension to tweak Slack",
   "main": "index.js",
   "scripts": {

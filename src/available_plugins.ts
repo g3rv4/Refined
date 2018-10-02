@@ -9,6 +9,7 @@ import MoveReactions from './plugins/moveReactions.js';
 import HideStatusEmoji from './plugins/hideStatusEmoji.js';
 import HideUrlPreviews from './plugins/hideUrlPreviews.js';
 import HideGDrivePreviews from './plugins/hideGDrivePreviews.js'
+import DoNotOpenLinksOnApp from './plugins/doNotOpenLinksOnApp.js';
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -20,5 +21,6 @@ export default {
     hideStatusEmoji: HideStatusEmoji,
     hideUrlPreviews: HideUrlPreviews,
     hideGDrivePreviews: HideGDrivePreviews,
+    doNotOpenLinksOnApp: DoNotOpenLinksOnApp,
 }
 // </sadness>

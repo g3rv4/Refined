@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.0.1
+
+* Add plugin to avoid opening Slack links on the app.
+
 ### 2.0.0
 
 * It's a major rewrite! all the features are independent plugins (so that users have moar control over what's enabled). This allows users to disable a feature and absolutely killing it.

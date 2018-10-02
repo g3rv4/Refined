@@ -20,7 +20,7 @@ export default abstract class BasePlugin {
     public getCSS() { return ''; }
 
     // this can be used by the plugins that only need an enable/disable switch
-    public static GenerateSettingsFromForm(current: any, newSettings: any){
+    public static GenerateSettingsFromForm(current: any, newSettings: any) {
         current = current || {};
         current.enabled = !!newSettings && newSettings.enabled === "1";
         return current;
@@ -42,6 +42,10 @@ export default abstract class BasePlugin {
     }
 
     protected setIntervalUntil(fn: () => boolean, callback: () => void) {
+        if (fn()) {
+            callback();
+            return;
+        }
         const interval = setInterval(() => {
             if (fn()) {
                 clearInterval(interval);
@@ -61,7 +65,7 @@ export default abstract class BasePlugin {
     protected getTeamId() {
         const w = window as any;
         return w.TS.boot_data.team_id; // this is available super early, which is useful to process messages
-                                       // since they're processed before window.TS.model.team has a value
+        // since they're processed before window.TS.model.team has a value
     }
 
     protected setLocalValue(key: string, value: any) {

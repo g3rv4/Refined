@@ -79,6 +79,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hideGDrivePreviews: {
                         enabled: false
+                    },
+                    doNotOpenLinksOnApp: {
+                        enabled: false
                     }
                 }
             }
