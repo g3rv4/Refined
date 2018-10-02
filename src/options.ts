@@ -51,11 +51,11 @@ form.addEventListener('submit', e => {
     });
 });
 
-document.querySelectorAll('.visit-site').forEach(e => {
+document.querySelectorAll('a').forEach(e => {
     e.addEventListener('click', e => {
         e.preventDefault();
 
-        chrome.tabs.create({ url: 'https://taut.rocks' }, closePopup);
+        chrome.tabs.create({ url: (e.target as HTMLAnchorElement).href }, closePopup);
     })
 });
 
