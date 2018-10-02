@@ -2,7 +2,7 @@ import BasePlugin, { InitResponse } from './basePlugin.js';
 
 export default class MarkdownLinks extends BasePlugin {
     public init(): InitResponse {
-        this.setIntervileUntil(
+        this.setIntervalUntil(
             () => {
                 const w = window as any;
                 return w.TS && w.TS.format;

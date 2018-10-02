@@ -27,7 +27,7 @@ export default abstract class BasePlugin {
     }
 
     protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
-        this.setIntervileUntil(
+        this.setIntervalUntil(
             () => !!document.querySelector(targetQuery),
             () => {
                 var targetNode = document.querySelector(targetQuery);
@@ -41,7 +41,7 @@ export default abstract class BasePlugin {
             })
     }
 
-    protected setIntervileUntil(fn: () => boolean, callback: () => void) {
+    protected setIntervalUntil(fn: () => boolean, callback: () => void) {
         const interval = setInterval(() => {
             if (fn()) {
                 clearInterval(interval);
