@@ -1,19 +1,17 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist/ff/",
-      "rootDir": "./src/",
-      "sourceMap": true,
-      "strict": false,
-      "module": "commonjs",
-      "target": "es6",
-      "jsx": "react",
-      "moduleResolution": "node",
-      "noEmitHelpers": true,
-      "typeRoots": [
-        "node_modules/@types"
-      ]
-    },
-    "include": [
-      "./src/*"
+  "compilerOptions": {
+    "outDir": "./dist/ff/",
+    "rootDir": "./src/",
+    "sourceMap": false,
+    "strict": false,
+    "module": "esnext",
+    "target": "es2017",
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@types"
     ]
-  }
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
