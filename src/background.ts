@@ -1,12 +1,11 @@
-import availablePlugins from './available_plugins.js';
+import availablePlugins from "./available_plugins.js";
 
 chrome.runtime.onInstalled.addListener(d => {
-    chrome.storage.sync.get(['acceptedRisks', 'settings', 'pluginSettings'], res => {
+    chrome.storage.sync.get(["acceptedRisks", "settings", "pluginSettings"], res => {
         if (!res.acceptedRisks) {
-            chrome.tabs.create({ url: chrome.extension.getURL('options.html') + '?fullpage=1' });
+            chrome.tabs.create({ url: chrome.extension.getURL("options.html") + "?fullpage=1" });
         }
 
-        debugger;
         if (!res.pluginSettings) {
             let pluginSettings = {};
             if (res.settings) {
@@ -45,9 +44,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     hideGDrivePreviews: {
                         enabled: !!settings.hide_gdrive_preview
                     }
-                }
+                };
             } else {
-                // it's a fresh install, load the defaults
+                // it"s a fresh install, load the defaults
                 pluginSettings = {
                     hideUsers: {
                         enabled: true,
@@ -83,7 +82,7 @@ chrome.runtime.onInstalled.addListener(d => {
                     doNotOpenLinksOnApp: {
                         enabled: false
                     }
-                }
+                };
             }
             chrome.storage.sync.set({
                 pluginSettings: JSON.stringify(pluginSettings)
@@ -93,12 +92,12 @@ chrome.runtime.onInstalled.addListener(d => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === 'slackPageOpened') {
+    if (request.type === "slackPageOpened") {
         chrome.pageAction.show(sender.tab.id);
-    } else if (request.type === 'closeThisTab') {
+    } else if (request.type === "closeThisTab") {
         chrome.tabs.remove(sender.tab.id);
-    } else if (request.type.startsWith('taut.')) {
-        const parts = request.type.split('.');
+    } else if (request.type.startsWith("taut.")) {
+        const parts = request.type.split(".");
         const potentialClass = availablePlugins[parts[1]];
 
         if (potentialClass) {

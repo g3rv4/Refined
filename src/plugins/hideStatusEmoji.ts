@@ -1,4 +1,4 @@
-import BasePlugin from './basePlugin.js';
+import BasePlugin from "./basePlugin.js";
 
 export default class HideStatusEmoji extends BasePlugin {
     public getCSS() {

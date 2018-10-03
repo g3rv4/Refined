@@ -1,10 +1,10 @@
-import { MessageTweakerPlugin } from './basePlugin.js';
+import { MessageTweakerPlugin } from "./basePlugin.js";
 
 export default class HideUrlPreviews extends MessageTweakerPlugin {
     protected processXHRMessages(messages: any) {
         messages = messages.map(m => {
             if (m.attachments) {
-                m.attachments = m.attachments.filter(m => !m.from_url);
+                m.attachments = m.attachments.filter(a => !a.from_url);
                 if (!m.attachments) {
                     delete m.attachments;
                 }

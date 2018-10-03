@@ -1,7 +1,7 @@
 export interface InitResponse {
-    interceptWS?: boolean,
-    interceptXHR?: boolean,
-    interceptReact?: boolean
+    interceptWS?: boolean;
+    interceptXHR?: boolean;
+    interceptReact?: boolean;
 }
 
 export default abstract class BasePlugin {
@@ -13,11 +13,11 @@ export default abstract class BasePlugin {
         this.settings = settings;
     }
 
-    public init(): InitResponse { return {}; };
+    public init(): InitResponse { return {}; }
     public interceptWS(data: any) { return data; }
-    public interceptXHR(request, method, path, async) { };
-    public interceptReact(displayName, props) { return props; };
-    public getCSS() { return ''; }
+    public interceptXHR(request, method, path, async) { }
+    public interceptReact(displayName, props) { return props; }
+    public getCSS() { return ""; }
 
     // this can be used by the plugins that only need an enable/disable switch
     public static GenerateSettingsFromForm(current: any, newSettings: any) {
@@ -30,15 +30,15 @@ export default abstract class BasePlugin {
         this.setIntervalUntil(
             () => !!document.querySelector(targetQuery),
             () => {
-                var targetNode = document.querySelector(targetQuery);
-                var observer = new MutationObserver((r, o) => {
-                    const nodes = r.map(r => [...r.addedNodes] as any)
+                const targetNode = document.querySelector(targetQuery);
+                const observer = new MutationObserver((rs, o) => {
+                    const nodes = rs.map(r => [...r.addedNodes] as any)
                         .reduce((a, b) => a.concat(b)) as Node[];
 
                     fn(nodes, o);
                 });
                 observer.observe(targetNode, observerOptions);
-            })
+            });
     }
 
     protected setIntervalUntil(fn: () => boolean, callback: () => void) {
@@ -65,7 +65,7 @@ export default abstract class BasePlugin {
     protected getTeamId() {
         const w = window as any;
         return w.TS.boot_data.team_id; // this is available super early, which is useful to process messages
-        // since they're processed before window.TS.model.team has a value
+        // since they"re processed before window.TS.model.team has a value
     }
 
     protected setLocalValue(key: string, value: any) {
@@ -131,16 +131,16 @@ export abstract class MessageTweakerPlugin extends BasePlugin {
     public interceptXHR(request, method, path, async) {
         let oldListener = _ => { };
         if (request.onreadystatechange) {
-            oldListener = request.onreadystatechange.bind(this);
+            oldListener = request.onreadystatechange.bind(request);
         }
 
-        if (path === '/api/conversations.view' || path.startsWith('/api/conversations.history')) {
+        if (path === "/api/conversations.view" || path.startsWith("/api/conversations.history")) {
             request.onreadystatechange = e => {
-                if (request.readyState == 4) {
+                if (request.readyState === 4) {
                     this.processConversations(request);
                 }
                 oldListener(e);
-            }
+            };
         }
     }
 

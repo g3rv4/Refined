@@ -1,4 +1,4 @@
-import BasePlugin, { InitResponse } from './basePlugin.js';
+import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class MarkdownLinks extends BasePlugin {
     public init(): InitResponse {
@@ -15,7 +15,7 @@ export default class MarkdownLinks extends BasePlugin {
                         t = t.replace(/<(?!!)([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
                     }
                     return old(t, n, r);
-                }
+                };
             }
         );
 
@@ -23,23 +23,24 @@ export default class MarkdownLinks extends BasePlugin {
     }
 
     public interceptXHR(request, method, path, async) {
-        if (path.startsWith('/api/conversations.setTopic') || path.startsWith('/api/chat.postMessage') || path.startsWith('/api/chat.update')) {
+        if (path.startsWith("/api/conversations.setTopic") || path.startsWith("/api/chat.postMessage") || path.startsWith("/api/chat.update")) {
             const oldSend = request.send.bind(request);
-            request.send = function (e) {
-                // setTopic has the 'topic' key, while 'postMessage' and 'update' use the 'text' key
-                const key = e.has('topic') ? 'topic' : 'text';
+            const send = e => {
+                // setTopic has the "topic" key, while "postMessage" and "update" use the "text" key
+                const key = e.has("topic") ? "topic" : "text";
 
                 let text = e.get(key);
                 text = text.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, (_, text, url) => `<${url}|${text}>`);
                 e.set(key, text);
 
                 // on chat update, we need to disable their parsing logic
-                if (path.startsWith('/api/chat.update')) {
-                    e.set('parse', 'none');
+                if (path.startsWith("/api/chat.update")) {
+                    e.set("parse", "none");
                 }
 
                 oldSend(e);
-            }.bind(request);
+            };
+            request.send = send.bind(request);
         }
     }
 }

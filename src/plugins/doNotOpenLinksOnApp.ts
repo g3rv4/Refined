@@ -1,4 +1,4 @@
-import BasePlugin from './basePlugin.js';
+import BasePlugin from "./basePlugin.js";
 
 export default class DoNotOpenLinksOnApp extends BasePlugin {
     public init() {
@@ -16,9 +16,9 @@ export default class DoNotOpenLinksOnApp extends BasePlugin {
                     } else {
                         return old(obj);
                     }
-                }
+                };
             }
-        )
+        );
 
         return {};
     }

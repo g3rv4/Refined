@@ -1,80 +1,98 @@
 module.exports = function (grunt) {
-
     grunt.initConfig({
         ts: {
-            prod: {
-                tsconfig: './tsconfig.json'
-            },
-            dev: {
-                tsconfig: './tsconfig.json',
-                watch: 'src/'
+            default: {
+                tsconfig: "./tsconfig.json"
             }
         },
         copy: {
             static: {
                 files: [
-                    { expand: true, src: ['**'], cwd: 'src/static/', dest: 'dist/ff/' },
+                    { expand: true, src: ["**"], cwd: "src/static/", dest: "dist/ff/" },
                 ],
             },
             chromeOpera: {
                 files: [
-                    { expand: true, src: ['**'], cwd: 'dist/ff/', dest: 'dist/chrome-opera/' },
+                    { expand: true, src: ["**"], cwd: "dist/ff/", dest: "dist/chrome-opera/" },
                 ]
             }
         },
         clean: {
             all: {
-                src: ['dist', 'zip']
+                src: ["dist", "zip"]
             }
         },
         watch: {
-            static: {
-                files: 'src/static/**/*',
-                tasks: ['copy:static']
-            },
-            ts: {
-                files: 'dist/ff/**/*',
-                tasks: ['copy:chromeOpera', 'fix-chrome-opera']
-            }
-        },
-        concurrent: {
-            dev: {
-                tasks: ['ts:dev', 'watch'],
+            tsfiles: {
+                files: "src/**/*.ts",
+                tasks: ["tslint:dev", "ts"],
                 options: {
-                    logConcurrentOutput: true
+                    spawn: false,
                 }
+            },
+            static: {
+                files: "src/static/**/*",
+                tasks: ["copy:static"]
+            },
+            chromeOpera: {
+                files: "dist/ff/**/*",
+                tasks: ["copy:chromeOpera", "fix-chrome-opera"]
             }
         },
         compress: {
             ff: {
                 options: {
-                    archive: 'dist/zip/firefox.zip'
+                    archive: "dist/zip/firefox.zip"
                 },
                 files: [
-                    { src: ['**/*'], dest: '/', cwd: 'dist/ff/', expand: true },
+                    { src: ["**/*"], dest: "/", cwd: "dist/ff/", expand: true },
                 ]
             },
             chromeOpera: {
                 options: {
-                    archive: 'dist/zip/chromeOpera.zip'
+                    archive: "dist/zip/chromeOpera.zip"
                 },
                 files: [
-                    { src: ['**/*'], dest: '/', cwd: 'dist/chrome-opera/', expand: true },
+                    { src: ["**/*"], dest: "/", cwd: "dist/chrome-opera/", expand: true },
                 ]
             },
-        }
+        },
+        tslint: {
+            dev: {
+                files: {
+                    src: "src/**/*.ts"
+                }
+            },
+            prod: {
+                options: {
+                    configuration: "tslint.prod.json"
+                },
+                files: {
+                    src: "src/**/*.ts"
+                }
+            }
+        },
     });
     grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-compress");
+    grunt.loadNpmTasks("grunt-tslint");
 
-    grunt.registerTask("build", ["clean", "ts:prod", "copy", "fix-chrome-opera", "compress"]);
-    grunt.registerTask("default", ['clean', 'copy', 'concurrent']);
+    grunt.registerTask("build", ["generate-tslint-prod", "tslint:prod", "clean", "ts", "copy", "fix-chrome-opera", "compress"]);
+    grunt.registerTask("default", ["clean", "tslint:dev", "ts", "copy", "watch"]);
 
-    grunt.registerTask('fix-chrome-opera', "Fix the manifest for Chrome and Opera", function () {
+    grunt.registerTask("generate-tslint-prod", "Generate the tslint file for prod", function () {
+        let tslint = grunt.file.readJSON("tslint.json");
+
+        delete tslint.rules["no-debugger"];
+        delete tslint.rules["no-console"];
+
+        grunt.file.write("tslint.prod.json", JSON.stringify(tslint, null, 2));
+    });
+
+    grunt.registerTask("fix-chrome-opera", "Fix the manifest for Chrome and Opera", function () {
         let manifest = grunt.file.readJSON("dist/chrome-opera/manifest.json");
 
         // fix manifest

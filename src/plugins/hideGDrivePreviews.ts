@@ -1,4 +1,4 @@
-import { MessageTweakerPlugin } from './basePlugin.js';
+import { MessageTweakerPlugin } from "./basePlugin.js";
 
 export default class HideGDrivePreviews extends MessageTweakerPlugin {
     protected processXHRMessages(messages: any) {
@@ -8,7 +8,7 @@ export default class HideGDrivePreviews extends MessageTweakerPlugin {
                     // write the docs urls instead
                     const urls = m.files.filter(f => f.external_type === "gdrive" && f.url_private)
                         .map(f => `<${f.url_private}|${f.url_private}>`);
-                    m.text = urls.join(', ');
+                    m.text = urls.join(", ");
                 }
                 m.files = m.files.filter(f => f.external_type !== "gdrive");
                 if (!m.files.length) {
@@ -28,7 +28,7 @@ export default class HideGDrivePreviews extends MessageTweakerPlugin {
                 // write the docs urls instead
                 const urls = message.files.filter(f => f.external_type === "gdrive" && f.url_private)
                     .map(f => `<${f.url_private}|${f.url_private}>`);
-                message.text = urls.join(', ');
+                message.text = urls.join(", ");
             }
             message.files = message.files.filter(f => f.external_type !== "gdrive");
             if (!message.files.length) {

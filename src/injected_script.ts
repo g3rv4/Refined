@@ -1,17 +1,16 @@
-import BasePlugin from './plugins/basePlugin.js';
-import availablePlugins from './available_plugins.js';
+import BasePlugin from "./plugins/basePlugin.js";
+import availablePlugins from "./available_plugins.js";
 
-const thisScript = document.getElementById('taut-injected-script');
+const thisScript = document.getElementById("taut-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
 const wsPlugins: BasePlugin[] = []; // plugins that mess with websockets
 const xhrPlugins: BasePlugin[] = []; // plugins that mess with xhr
 const reactPlugins: BasePlugin[] = []; // plugins that mess with react
 
-let css = '';
+let css = "";
 const plugins = Object.keys(settings);
-for (let i = 0; i < plugins.length; i++) {
-    const pluginName = plugins[i];
+for (const pluginName of plugins) {
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
         const plugin: BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         const res = plugin.init();
@@ -31,28 +30,24 @@ for (let i = 0; i < plugins.length; i++) {
 
 const w: any = window;
 if (css) {
-    var sheet = document.createElement('style');
-    sheet.type = 'text/css';
+    const sheet = document.createElement("style");
+    sheet.type = "text/css";
     w.customSheet = sheet;
-    (document.head || document.getElementsByTagName('head')[0]).appendChild(sheet);
+    (document.head || document.getElementsByTagName("head")[0]).appendChild(sheet);
     sheet.appendChild(document.createTextNode(css));
 }
 
 if (xhrPlugins.length) {
-    var proxied = w.XMLHttpRequest.prototype.open;
-    w.XMLHttpRequest.prototype.open = function (method, path, async) {
-        for (let i = 0; i < xhrPlugins.length; i++) {
-            xhrPlugins[i].interceptXHR(this, method, path, async);
+    const proxied = w.XMLHttpRequest.prototype.open;
+    w.XMLHttpRequest.prototype.open = function (method, path, async): any {
+        for (const xhrPlugin of xhrPlugins) {
+            xhrPlugin.interceptXHR(this, method, path, async);
         }
 
         this.bindResponse = response => {
-            this.__defineGetter__("responseText", function () {
-                return response
-            });
-            this.__defineGetter__("response", function () {
-                return response
-            });
-        }
+            this.__defineGetter__("responseText", () => response);
+            this.__defineGetter__("response", () => response);
+        };
 
         return proxied.apply(this, [].slice.call(arguments));
     };
@@ -61,27 +56,25 @@ if (xhrPlugins.length) {
 if (wsPlugins.length) {
     // proxy the window.WebSocket object
     const WebSocketProxy = new Proxy(w.WebSocket, {
-        construct: function (target, args) {
+        construct(target, args) {
             function bindWebSocketData(event, data) {
-                event.__defineGetter__("data", function () {
-                    return data;
-                });
+                event.__defineGetter__("data", () => data);
             }
 
             // create WebSocket instance
             const instance = new target(...args);
 
-            const messageHandler = (event) => {
+            const messageHandler = event => {
                 let data = JSON.parse(event.data);
 
-                for (let i = 0; i < wsPlugins.length; i++) {
-                    data = wsPlugins[i].interceptWS(data);
+                for (const wsPlugin of wsPlugins) {
+                    data = wsPlugin.interceptWS(data);
                 }
 
                 bindWebSocketData(event, JSON.stringify(data));
             };
 
-            instance.addEventListener('message', messageHandler);
+            instance.addEventListener("message", messageHandler);
 
             // return the WebSocket instance
             return instance;
@@ -94,8 +87,8 @@ if (wsPlugins.length) {
 
 if (reactPlugins.length) {
     const reactInterval = setInterval(() => {
-        const w = window as any;
-        if (w.React && w.React.createElement) {
+        const ww = window as any;
+        if (ww.React && ww.React.createElement) {
             clearInterval(reactInterval);
         } else {
             return;
@@ -105,15 +98,12 @@ if (reactPlugins.length) {
         const originalCreateElement = w.React.createElement;
 
         // Define a new function
-        w.React.createElement = function () {
-            // Get our arguments as an array
-            const args = Array.prototype.slice.call(arguments);
-
+        ww.React.createElement = (...args) => {
             const displayName = args[0].displayName;
             if (displayName) {
                 let props = args[1];
-                for (let i = 0; i < reactPlugins.length; i++) {
-                    props = reactPlugins[i].interceptReact(displayName, props);
+                for (const reactPlugin of reactPlugins) {
+                    props = reactPlugin.interceptReact(displayName, props);
                 }
                 args[1] = props;
             }
