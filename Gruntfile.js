@@ -25,7 +25,7 @@ module.exports = function (grunt) {
         watch: {
             tsfiles: {
                 files: "src/**/*.ts",
-                tasks: ["tslint:dev", "ts"],
+                tasks: ["tslint:dev", "ts", "copy:chromeOpera", "fix-chrome-opera"],
                 options: {
                     spawn: false,
                 }
@@ -33,10 +33,6 @@ module.exports = function (grunt) {
             static: {
                 files: "src/static/**/*",
                 tasks: ["copy:static"]
-            },
-            chromeOpera: {
-                files: "dist/ff/**/*",
-                tasks: ["copy:chromeOpera", "fix-chrome-opera"]
             }
         },
         compress: {
