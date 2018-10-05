@@ -5,7 +5,7 @@ export default class HideUrlPreviews extends MessageTweakerPlugin {
         messages = messages.map(m => {
             if (m.attachments) {
                 m.attachments = m.attachments.filter(a => !a.from_url);
-                if (!m.attachments) {
+                if (!m.attachments.length) {
                     delete m.attachments;
                 }
             }
@@ -18,7 +18,7 @@ export default class HideUrlPreviews extends MessageTweakerPlugin {
     protected processWSMessage(data: any) {
         if (data.message && data.message.attachments) {
             data.message.attachments = data.message.attachments.filter(m => !m.from_url);
-            if (!data.message.attachments) {
+            if (!data.message.attachments.length) {
                 delete data.message.attachments;
             }
         }

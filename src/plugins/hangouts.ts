@@ -1,8 +1,10 @@
 import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class Hangouts extends BasePlugin {
-    public init(): InitResponse {
-        return { interceptXHR: true };
+    public constructor(name: string, settings: any) {
+        super(name, settings);
+
+        this.shouldInterceptXHR = true;
     }
 
     public static GenerateSettingsFromForm(current: any, newSettings: any) {

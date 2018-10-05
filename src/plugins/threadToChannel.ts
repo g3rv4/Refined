@@ -1,7 +1,7 @@
 import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class ThreadToChannel extends BasePlugin {
-    public init(): InitResponse {
+    public async init(): Promise<void> {
         this.setUpObserver("#convo_tab",
             { attributes: false, childList: true, subtree: true },
             (nodes, _) => {
@@ -11,7 +11,5 @@ export default class ThreadToChannel extends BasePlugin {
                     checkbox.checked = true;
                 }
             });
-
-        return {};
     }
 }

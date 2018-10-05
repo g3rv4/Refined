@@ -1,7 +1,14 @@
 import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class UnreadOnTitle extends BasePlugin {
-    public init(): InitResponse {
+    public constructor(name: string, settings: any) {
+        super(name, settings);
+
+        this.shouldInterceptWS = true;
+        this.shouldInterceptReact = true;
+    }
+
+    public async init(): Promise<void> {
         this.setUpObserver("title",
             { attributes: true, childList: true, subtree: true },
             () => {
@@ -9,8 +16,6 @@ export default class UnreadOnTitle extends BasePlugin {
                     document.title = document.title.substring(2);
                 }
             });
-
-        return { interceptWS: true, interceptReact: true };
     }
 
     public interceptWS(data: any) {

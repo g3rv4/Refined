@@ -7,13 +7,20 @@ export interface InitResponse {
 export default abstract class BasePlugin {
     protected settings: any;
     protected name: string;
+    public shouldInterceptWS: boolean;
+    public shouldInterceptXHR: boolean;
+    public shouldInterceptReact: boolean;
 
     public constructor(name: string, settings: any) {
         this.name = name;
         this.settings = settings;
+
+        this.shouldInterceptWS = false;
+        this.shouldInterceptXHR = false;
+        this.shouldInterceptReact = false;
     }
 
-    public init(): InitResponse { return {}; }
+    public async init(): Promise<void> { }
     public interceptWS(data: any) { return data; }
     public interceptXHR(request, method, path, async) { }
     public interceptReact(displayName, props) { return props; }
@@ -26,46 +33,37 @@ export default abstract class BasePlugin {
         return current;
     }
 
-    protected setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
-        this.setIntervalUntil(
-            () => !!document.querySelector(targetQuery),
-            () => {
-                const targetNode = document.querySelector(targetQuery);
-                const observer = new MutationObserver((rs, o) => {
-                    const nodes = rs.map(r => [...r.addedNodes] as any)
-                        .reduce((a, b) => a.concat(b)) as Node[];
+    protected async setUpObserver(targetQuery: string, observerOptions: MutationObserverInit, fn: (records: any[], observer: MutationObserver) => void) {
+        const targetNode = await this.getElement(() => document.querySelector(targetQuery));
+        const observer = new MutationObserver((rs, o) => {
+            const nodes = rs.map(r => [...r.addedNodes] as any)
+                .reduce((a, b) => a.concat(b)) as Node[];
 
-                    fn(nodes, o);
-                });
-                observer.observe(targetNode, observerOptions);
-            });
+            fn(nodes, o);
+        });
+        observer.observe(targetNode, observerOptions);
     }
 
-    protected setIntervalUntil(fn: () => boolean, callback: () => void) {
-        if (fn()) {
-            callback();
-            return;
-        }
-        const interval = setInterval(() => {
-            if (fn()) {
-                clearInterval(interval);
-            } else {
-                return;
+    protected getElement<T>(fn: () => T): Promise<T> {
+        return new Promise((resolve, _) => {
+            const res = fn();
+            if (res) {
+                resolve(res);
             }
 
-            callback();
-        }, 200);
+            const interval = setInterval(() => {
+                const res = fn();
+                if (res) {
+                    clearInterval(interval);
+                    resolve(res);
+                }
+            }, 200);
+        });
     }
 
     protected getSlackModel() {
         const w = window as any;
         return w.TS.model;
-    }
-
-    protected getTeamId() {
-        const w = window as any;
-        return w.TS.boot_data.team_id; // this is available super early, which is useful to process messages
-        // since they"re processed before window.TS.model.team has a value
     }
 
     protected setLocalValue(key: string, value: any) {
@@ -118,11 +116,11 @@ export default abstract class BasePlugin {
 }
 
 export abstract class MessageTweakerPlugin extends BasePlugin {
-    public init(): InitResponse {
-        return {
-            interceptXHR: true,
-            interceptWS: true
-        };
+    public constructor(name: string, settings: any) {
+        super(name, settings);
+
+        this.shouldInterceptWS = true;
+        this.shouldInterceptXHR = true;
     }
 
     protected abstract processXHRMessages(messages: any[]): any[];

@@ -2,23 +2,32 @@ import { InitResponse, MessageTweakerPlugin } from "./basePlugin.js";
 
 export default class HideUsers extends MessageTweakerPlugin {
     private _hidden_ids: string[];
+    private _team_id: string;
 
     private get hidden_ids(): string[] {
         if (!this._hidden_ids) {
-            const teamId = this.getTeamId();
-            this._hidden_ids = this.settings.hidden_ids.filter(i => i.startsWith("*.") || i.startsWith(`${teamId}.`))
+            this._hidden_ids = this.settings.hidden_ids.filter(i => i.startsWith("*.") || i.startsWith(`${this._team_id}.`))
                 .map(i => i.split(".").pop());
         }
         return this._hidden_ids;
     }
 
-    public init(): InitResponse {
-        this.observeThings();
+    public constructor(name: string, settings: any) {
+        super(name, settings);
 
-        return {
-            interceptXHR: true,
-            interceptWS: true
-        };
+        this.shouldInterceptWS = true;
+        this.shouldInterceptXHR = true;
+    }
+
+    public async init(): Promise<void> {
+        // wait until we have the boot data element to initialize... otherwise, we can't get the teamid
+        const boot_data = await this.getElement(() => {
+            const w: any = window;
+            return w.boot_data;
+        });
+
+        this._team_id = boot_data.team_id;
+        this.observeThings();
     }
 
     public static ProcessExtensionMessage(request: any, pluginName: string, sender: chrome.runtime.MessageSender) {
@@ -110,7 +119,6 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                                 const userIds = users.map(m => m.id);
                                 const botIds = bots.map(b => b.id);
-                                const teamId = this.getTeamId();
 
                                 hidden_ids.forEach(userId => {
                                     let muted;
@@ -132,7 +140,7 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                                         const input = document.createElement("input");
                                         input.value = "1";
-                                        input.name = `${teamId}.${muted.id}`;
+                                        input.name = `${this._team_id}.${muted.id}`;
                                         input.type = "checkbox";
                                         current.appendChild(input);
 
@@ -193,7 +201,7 @@ export default class HideUsers extends MessageTweakerPlugin {
                     .filter(e => e)
                     .reduce((a, b) => a.concat(b), []);
 
-                const teamId = this.getTeamId();
+                const teamId = this._team_id;
                 headers.forEach(h => {
                     if (!h.dataset.taut) {
                         h.dataset.taut = "1";

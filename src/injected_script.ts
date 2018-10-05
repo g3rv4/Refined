@@ -4,29 +4,21 @@ import availablePlugins from "./available_plugins.js";
 const thisScript = document.getElementById("taut-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
-const wsPlugins: BasePlugin[] = []; // plugins that mess with websockets
-const xhrPlugins: BasePlugin[] = []; // plugins that mess with xhr
-const reactPlugins: BasePlugin[] = []; // plugins that mess with react
-
 let css = "";
 const plugins = Object.keys(settings);
+const enabledPlugins: BasePlugin[] = [];
 for (const pluginName of plugins) {
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
         const plugin: BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
-        const res = plugin.init();
-        css += plugin.getCSS();
+        enabledPlugins.push(plugin);
 
-        if (res.interceptXHR) {
-            xhrPlugins.push(plugin);
-        }
-        if (res.interceptWS) {
-            wsPlugins.push(plugin);
-        }
-        if (res.interceptReact) {
-            reactPlugins.push(plugin);
-        }
+        css += plugin.getCSS();
     }
 }
+
+const wsPlugins = enabledPlugins.filter(p => p.shouldInterceptWS);
+const xhrPlugins = enabledPlugins.filter(p => p.shouldInterceptXHR);
+const reactPlugins = enabledPlugins.filter(p => p.shouldInterceptReact);
 
 const w: any = window;
 if (css) {
@@ -112,3 +104,9 @@ if (reactPlugins.length) {
         };
     }, 100);
 }
+
+(async () => {
+    for (const plugin of enabledPlugins) {
+        await plugin.init();
+    }
+})();

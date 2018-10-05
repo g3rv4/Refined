@@ -1,25 +1,25 @@
 import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class MarkdownLinks extends BasePlugin {
-    public init(): InitResponse {
-        this.setIntervalUntil(
-            () => {
-                const w = window as any;
-                return w.TS && w.TS.format;
-            },
-            () => {
-                const w = window as any;
-                const old = w.TS.format.formatWithOptions;
-                w.TS.format.formatWithOptions = (t, n, r) => {
-                    if (r && r.for_edit) {
-                        t = t.replace(/<(?!!)([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
-                    }
-                    return old(t, n, r);
-                };
-            }
-        );
+    public constructor(name: string, settings: any) {
+        super(name, settings);
 
-        return { interceptXHR: true };
+        this.shouldInterceptXHR = true;
+    }
+
+    public async init(): Promise<void> {
+        const old = await this.getElement(() => {
+            const w = window as any;
+            return w.TS && w.TS.format && w.TS.format.formatWithOptions;
+        });
+
+        const w = window as any;
+        w.TS.format.formatWithOptions = (t, n, r) => {
+            if (r && r.for_edit) {
+                t = t.replace(/<(?!!)([^<>\|]+)\|([^<>]+)>/g, (_, url, title) => `[${title}](${url})`);
+            }
+            return old(t, n, r);
+        };
     }
 
     public interceptXHR(request, method, path, async) {

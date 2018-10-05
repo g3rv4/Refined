@@ -1,8 +1,10 @@
 import BasePlugin, { InitResponse } from "./basePlugin.js";
 
 export default class MaintainThreadToChannel extends BasePlugin {
-    public init(): InitResponse {
-        return { interceptXHR: true };
+    public constructor(name: string, settings: any) {
+        super(name, settings);
+
+        this.shouldInterceptXHR = true;
     }
 
     public interceptXHR(request, method, path, async) {
