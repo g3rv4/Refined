@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "sourceMap": false,
+    "rootDir": "./src/",
+    "strict": false,
+    "module": "none",
+    "target": "es2017",
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
+  },
+  "exclude": [
+    "dist"
+  ]
+}

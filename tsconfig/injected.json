@@ -1,0 +1,9 @@
+{
+  "extends": "base.json",
+  "compilerOptions": {
+    "outFile": "../dist/ff/injected_script.js"
+  },
+  "files": [
+    "../src/injected_script.ts"
+  ]
+}

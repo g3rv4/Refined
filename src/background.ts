@@ -1,4 +1,4 @@
-import availablePlugins from "./available_plugins.js";
+/// <reference path="./available_plugins.ts"/>
 
 chrome.runtime.onInstalled.addListener(d => {
     chrome.storage.sync.get(["acceptedRisks", "settings", "pluginSettings"], res => {
@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         chrome.tabs.remove(sender.tab.id);
     } else if (request.type.startsWith("taut.")) {
         const parts = request.type.split(".");
-        const potentialClass = availablePlugins[parts[1]];
+        const potentialClass = Plugins.AvailablePlugins.get()[parts[1]];
 
         if (potentialClass) {
             request.type = parts[2];

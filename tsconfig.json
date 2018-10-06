@@ -1,17 +1,3 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/ff/",
-    "rootDir": "./src/",
-    "sourceMap": false,
-    "strict": false,
-    "module": "esnext",
-    "target": "es2017",
-    "moduleResolution": "node",
-    "typeRoots": [
-      "node_modules/@types"
-    ]
-  },
-  "include": [
-    "./src/**/*"
-  ]
+  "extends": "./tsconfig/base.json",
 }

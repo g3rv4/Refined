@@ -1,0 +1,9 @@
+{
+  "extends": "base.json",
+  "compilerOptions": {
+    "outFile": "../dist/ff/background.js"
+  },
+  "files": [
+    "../src/background.ts"
+  ]
+}

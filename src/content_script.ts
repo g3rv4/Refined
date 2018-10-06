@@ -10,10 +10,14 @@ chrome.storage.sync.get(["acceptedRisks", "pluginSettings"], res => {
         return;
     }
 
-    const script = document.createElement("script");
-    script.type = "module";
-    script.src = chrome.extension.getURL("injected_script.js");
-    script.dataset.settings = res.pluginSettings;
-    script.id = "taut-injected-script";
-    document.documentElement.appendChild(script);
+    const injectedScript = document.createElement("script");
+    injectedScript.innerText = `(${loadContent.toString()})()`;
+    injectedScript.type = "text/javascript";
+    injectedScript.dataset.settings = res.pluginSettings;
+    injectedScript.id = "taut-injected-script";
+    document.head.appendChild(injectedScript);
 });
+
+function loadContent() {
+    return "placeholder";
+}

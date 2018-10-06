@@ -1,15 +1,16 @@
-import BasePlugin from "./plugins/basePlugin.js";
-import availablePlugins from "./available_plugins.js";
+/// <reference path="./plugins/basePlugin.ts" />
+/// <reference path="./available_plugins.ts" />
 
 const thisScript = document.getElementById("taut-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
 let css = "";
 const plugins = Object.keys(settings);
-const enabledPlugins: BasePlugin[] = [];
+const enabledPlugins: Plugins.BasePlugin[] = [];
+const availablePlugins = Plugins.AvailablePlugins.get();
 for (const pluginName of plugins) {
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
-        const plugin: BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
+        const plugin: Plugins.BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         enabledPlugins.push(plugin);
 
         css += plugin.getCSS();
@@ -32,14 +33,14 @@ if (css) {
 if (xhrPlugins.length) {
     const proxied = w.XMLHttpRequest.prototype.open;
     w.XMLHttpRequest.prototype.open = function (method, path, async): any {
-        for (const xhrPlugin of xhrPlugins) {
-            xhrPlugin.interceptXHR(this, method, path, async);
-        }
-
         this.bindResponse = response => {
             this.__defineGetter__("responseText", () => response);
             this.__defineGetter__("response", () => response);
         };
+
+        for (const xhrPlugin of xhrPlugins) {
+            xhrPlugin.interceptXHR(this, method, path, async);
+        }
 
         return proxied.apply(this, [].slice.call(arguments));
     };

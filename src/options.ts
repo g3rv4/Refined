@@ -1,4 +1,4 @@
-import availablePlugins from "./available_plugins.js";
+/// <reference path="./available_plugins.ts"/>
 
 const reloadSlackTabs = (callback?: () => void) => {
     chrome.tabs.query({ url: "https://*.slack.com/*" }, tabs => {
@@ -38,6 +38,7 @@ form.addEventListener("submit", e => {
     chrome.storage.sync.get(["acceptedRisks", "pluginSettings"], res => {
         const currentSettings = JSON.parse(res.pluginSettings || "{}");
 
+        const availablePlugins = Plugins.AvailablePlugins.get();
         const plugins = Object.keys(availablePlugins);
         for (const pluginName of plugins) {
             newSettings[pluginName] = availablePlugins[pluginName].GenerateSettingsFromForm(currentSettings[pluginName], newSettings[pluginName]);

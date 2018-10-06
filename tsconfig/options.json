@@ -1,0 +1,9 @@
+{
+  "extends": "base.json",
+  "compilerOptions": {
+    "outFile": "../dist/ff/options.js"
+  },
+  "files": [
+    "../src/options.ts"
+  ]
+}

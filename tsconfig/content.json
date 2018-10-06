@@ -1,0 +1,9 @@
+{
+  "extends": "base.json",
+  "compilerOptions": {
+    "outFile": "../dist/ff/content_script.js"
+  },
+  "files": [
+    "../src/content_script.ts"
+  ]
+}

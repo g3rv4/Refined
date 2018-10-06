@@ -1,8 +1,17 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
-            default: {
-                tsconfig: "./tsconfig.json"
+            background: {
+                tsconfig: "./tsconfig/background.json"
+            },
+            content: {
+                tsconfig: "./tsconfig/content.json"
+            },
+            injected: {
+                tsconfig: "./tsconfig/injected.json"
+            },
+            opt: {
+                tsconfig: "./tsconfig/options.json"
             }
         },
         copy: {
@@ -23,16 +32,13 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            tsfiles: {
+            ts: {
                 files: "src/**/*.ts",
-                tasks: ["tslint:dev", "ts", "copy:chromeOpera", "fix-chrome-opera"],
-                options: {
-                    spawn: false,
-                }
+                tasks: ["tslint:dev", "ts", "fill-content-script", "copy:chromeOpera", "fix-chrome-opera"]
             },
             static: {
                 files: "src/static/**/*",
-                tasks: ["copy:static"]
+                tasks: ["copy:static", "fix-chrome-opera"]
             }
         },
         compress: {
@@ -76,8 +82,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-tslint");
 
-    grunt.registerTask("build", ["generate-tslint-prod", "tslint:prod", "clean", "ts", "copy", "fix-chrome-opera", "compress"]);
-    grunt.registerTask("default", ["clean", "tslint:dev", "ts", "copy", "fix-chrome-opera", "watch"]);
+    grunt.registerTask("build", ["generate-tslint-prod", "tslint:prod", "clean", "ts", "fill-content-script", "copy", "fix-chrome-opera", "compress"]);
+    grunt.registerTask("default", ["clean", "tslint:dev", "ts", "fill-content-script", "copy", "fix-chrome-opera", "watch"]);
 
     grunt.registerTask("generate-tslint-prod", "Generate the tslint file for prod", function () {
         let tslint = grunt.file.readJSON("tslint.json");
@@ -97,4 +103,14 @@ module.exports = function (grunt) {
 
         grunt.file.write("dist/chrome-opera/manifest.json", JSON.stringify(manifest, null, 2));
     });
+
+    grunt.registerTask("fill-content-script", "Adds the injected script data into the content script file", function () {
+        let injected = grunt.file.read("dist/ff/injected_script.js");
+        let content = grunt.file.read("dist/ff/content_script.js");
+
+        content = content.replace('return "placeholder";', injected);
+
+        grunt.file.write("dist/ff/content_script.js", content);
+        grunt.file.delete("dist/ff/injected_script.js");
+    })
 };

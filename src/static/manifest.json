@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Taut - a tool for Slack",
     "description": "Mute users, use markdown links, add unread message counter to the title, move reactions to the right, disable url previews and more!",
-    "version": "2.0.1.1",
+    "version": "2.0.1.2",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true
@@ -37,13 +37,8 @@
             "run_at": "document_start"
         }
     ],
-    "web_accessible_resources": [
-        "injected_script.js",
-        "available_plugins.js",
-        "plugins/*"
-    ],
     "background": {
-        "page": "background.html"
+        "scripts": ["background.js"]
     },
     "permissions": [
         "storage",
