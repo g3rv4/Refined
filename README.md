@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.0.2
+
+* Fix post to channel on the "All threads" view.
+
 ### 2.0.1
 
 * Add plugin to avoid opening Slack links on the app.
