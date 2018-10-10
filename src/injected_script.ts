@@ -1,16 +1,15 @@
-/// <reference path="./plugins/basePlugin.ts" />
-/// <reference path="./available_plugins.ts" />
+import BasePlugin from "./plugins/basePlugin";
+import availablePlugins from "./available_plugins";
 
 const thisScript = document.getElementById("taut-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
 let css = "";
 const plugins = Object.keys(settings);
-const enabledPlugins: Plugins.BasePlugin[] = [];
-const availablePlugins = Plugins.AvailablePlugins.get();
+const enabledPlugins: BasePlugin[] = [];
 for (const pluginName of plugins) {
     if (settings[pluginName].enabled && availablePlugins[pluginName]) {
-        const plugin: Plugins.BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
+        const plugin: BasePlugin = new availablePlugins[pluginName](pluginName, settings[pluginName]);
         enabledPlugins.push(plugin);
 
         css += plugin.getCSS();

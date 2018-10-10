@@ -1,17 +1,8 @@
 module.exports = function (grunt) {
     grunt.initConfig({
         ts: {
-            background: {
-                tsconfig: "./tsconfig/background.json"
-            },
-            content: {
-                tsconfig: "./tsconfig/content.json"
-            },
-            injected: {
-                tsconfig: "./tsconfig/injected.json"
-            },
-            opt: {
-                tsconfig: "./tsconfig/options.json"
+            default: {
+                tsconfig: "./tsconfig.json"
             }
         },
         copy: {
@@ -32,9 +23,12 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            ts: {
+            tsfiles: {
                 files: "src/**/*.ts",
-                tasks: ["tslint:dev", "ts", "fill-content-script", "copy:chromeOpera", "fix-chrome-opera"]
+                tasks: ["tslint:dev", "ts", "rollup", "fill-content-script", "copy:chromeOpera", "fix-chrome-opera"],
+                options: {
+                    spawn: false,
+                }
             },
             static: {
                 files: "src/static/**/*",
@@ -74,6 +68,23 @@ module.exports = function (grunt) {
                 }
             }
         },
+        rollup: {
+            options: {
+                format: 'iife'
+            },
+            injected: {
+                src: 'dist/ff/injected_script.js',
+                dest: 'dist/ff/injected_script.js'
+            },
+            background: {
+                src: 'dist/ff/background.js',
+                dest: 'dist/ff/background.js'
+            },
+            opt: {
+                src: 'dist/ff/options.js',
+                dest: 'dist/ff/options.js'
+            }
+        }
     });
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks("grunt-contrib-copy");
@@ -81,9 +92,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-tslint");
+    grunt.loadNpmTasks('grunt-rollup');
 
-    grunt.registerTask("build", ["generate-tslint-prod", "tslint:prod", "clean", "ts", "fill-content-script", "copy", "fix-chrome-opera", "compress"]);
-    grunt.registerTask("default", ["clean", "tslint:dev", "ts", "fill-content-script", "copy", "fix-chrome-opera", "watch"]);
+    grunt.registerTask("build", ["generate-tslint-prod", "tslint:prod", "clean", "ts", "rollup", "fill-content-script", "copy", "fix-chrome-opera", "compress"]);
+    grunt.registerTask("default", ["clean", "tslint:dev", "ts", "rollup", "fill-content-script", "copy", "fix-chrome-opera", "watch"]);
 
     grunt.registerTask("generate-tslint-prod", "Generate the tslint file for prod", function () {
         let tslint = grunt.file.readJSON("tslint.json");

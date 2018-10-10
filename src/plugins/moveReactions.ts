@@ -1,9 +1,8 @@
-/// <reference path="./basePlugin.ts" />
+import BasePlugin from "./basePlugin";
 
-namespace Plugins {
-    export class MoveReactions extends BasePlugin {
-        public getCSS() {
-            return `
+export default class MoveReactions extends BasePlugin {
+    public getCSS() {
+        return `
 .c-reaction_bar {
     position: absolute;
     bottom: 5px;
@@ -21,6 +20,5 @@ namespace Plugins {
 .c-reaction_add, .c-reaction_add:hover {
     display: none !important;
 }`;
-        }
     }
 }

@@ -1,12 +1,10 @@
-/// <reference path="./basePlugin.ts" />
+import BasePlugin from "./basePlugin";
 
-namespace Plugins {
-    export class HideStatusEmoji extends BasePlugin {
-        public getCSS() {
-            return `
+export default class HideStatusEmoji extends BasePlugin {
+    public getCSS() {
+        return `
 .c-custom_status, .message_current_status {
     display: none !important;
 }`;
-        }
     }
 }

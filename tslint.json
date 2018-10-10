@@ -7,8 +7,6 @@
   "rules": {
     "no-debugger": false,
     "no-console": false,
-    "no-reference": false,
-    "no-namespace": false,
     "object-literal-sort-keys": false,
     "arrow-parens": [
       true,
