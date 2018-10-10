@@ -73,15 +73,15 @@ module.exports = function (grunt) {
                 format: 'iife'
             },
             injected: {
-                src: 'dist/ff/injected_script.js',
+                src: 'dist/modulesjs/injected_script.js',
                 dest: 'dist/ff/injected_script.js'
             },
             background: {
-                src: 'dist/ff/background.js',
+                src: 'dist/modulesjs/background.js',
                 dest: 'dist/ff/background.js'
             },
             opt: {
-                src: 'dist/ff/options.js',
+                src: 'dist/modulesjs/options.js',
                 dest: 'dist/ff/options.js'
             }
         }
@@ -117,8 +117,12 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("fill-content-script", "Adds the injected script data into the content script file", function () {
-        let injected = grunt.file.read("dist/ff/injected_script.js");
-        let content = grunt.file.read("dist/ff/content_script.js");
+        // this file is already rolled up
+        const injected = grunt.file.read("dist/ff/injected_script.js");
+
+        // this only works because it doesn't load modules, otherwise
+        // we'd need to grab it from ff... but that may have already been filled
+        let content = grunt.file.read("dist/modulesjs/content_script.js");
 
         content = content.replace('return "placeholder";', injected);
 

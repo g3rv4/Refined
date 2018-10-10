@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/ff/",
+    "outDir": "./dist/modulesjs/",
     "rootDir": "./src/",
     "sourceMap": false,
     "strict": false,
