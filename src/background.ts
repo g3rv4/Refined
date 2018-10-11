@@ -26,6 +26,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     unreadOnTitle: {
                         enabled: !!settings.unread_on_title
                     },
+                    unreadOnFavicon: {
+                        enabled: false
+                    },
                     threadToChannel: {
                         enabled: !!settings.threads_on_channel
                     },
@@ -61,6 +64,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     unreadOnTitle: {
                         enabled: true
                     },
+                    unreadOnFavicon: {
+                        enabled: false
+                    },
                     threadToChannel: {
                         enabled: false
                     },
@@ -87,6 +93,21 @@ chrome.runtime.onInstalled.addListener(d => {
             chrome.storage.sync.set({
                 pluginSettings: JSON.stringify(pluginSettings)
             });
+        } else {
+            let pluginUpdated = false;
+            const pluginSettings = JSON.parse(res.pluginSettings);
+
+            // new plugins
+            if (pluginSettings.unreadOnFavicon === undefined) {
+                pluginUpdated = true;
+                pluginSettings.unreadOnFavicon = false;
+            }
+
+            if (pluginUpdated) {
+                chrome.storage.sync.set({
+                    pluginSettings: JSON.stringify(pluginSettings)
+                });
+            }
         }
     });
 });

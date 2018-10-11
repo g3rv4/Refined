@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.0.3
+
+* Add plugin to show the count of unread messages on the favicon.
+
 ### 2.0.2
 
 * Fix post to channel on the "All threads" view.
