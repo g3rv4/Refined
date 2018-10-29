@@ -10,6 +10,7 @@ import HideUrlPreviews from "./plugins/hideUrlPreviews";
 import HideGDrivePreviews from "./plugins/hideGDrivePreviews";
 import DoNotOpenLinksOnApp from "./plugins/doNotOpenLinksOnApp";
 import UnreadOnFavicon from "./plugins/unreadOnFavicon";
+import MoveSidebar from "./plugins/moveSidebar";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -23,4 +24,5 @@ export default {
     hideGDrivePreviews: HideGDrivePreviews,
     doNotOpenLinksOnApp: DoNotOpenLinksOnApp,
     unreadOnFavicon: UnreadOnFavicon,
+    moveSidebar: MoveSidebar,
 };

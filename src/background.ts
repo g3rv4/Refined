@@ -46,7 +46,10 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     hideGDrivePreviews: {
                         enabled: !!settings.hide_gdrive_preview
-                    }
+                    },
+                    moveSidebar: {
+                        enabled: false
+                    },
                 };
             } else {
                 // it"s a fresh install, load the defaults
@@ -87,6 +90,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     doNotOpenLinksOnApp: {
                         enabled: false
+                    },
+                    moveSidebar: {
+                        enabled: false
                     }
                 };
             }
@@ -101,6 +107,10 @@ chrome.runtime.onInstalled.addListener(d => {
             if (pluginSettings.unreadOnFavicon === undefined) {
                 pluginUpdated = true;
                 pluginSettings.unreadOnFavicon = false;
+            }
+            if (pluginSettings.moveSidebar === undefined) {
+                pluginUpdated = true;
+                pluginSettings.moveSidebar = false;
             }
 
             if (pluginUpdated) {

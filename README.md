@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.1.0
+
+* Add plugin to move the sidebar to the right.
+
 ### 2.0.3
 
 * Add plugin to show the count of unread messages on the favicon.
