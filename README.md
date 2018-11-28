@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.1.1
+
+* Bugfix when editing a message: If it has a non-formatted link, don't break it.
+
 ### 2.1.0
 
 * Add plugin to move the sidebar to the right.

@@ -35,7 +35,7 @@ export default class MarkdownLinks extends BasePlugin {
 
                 // on chat update, we need to disable their parsing logic
                 if (path.startsWith("/api/chat.update")) {
-                    e.set("parse", "none");
+                    e.set("parse", "default");
                 }
 
                 oldSend(e);
