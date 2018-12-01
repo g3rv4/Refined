@@ -11,6 +11,7 @@ import HideGDrivePreviews from "./plugins/hideGDrivePreviews";
 import DoNotOpenLinksOnApp from "./plugins/doNotOpenLinksOnApp";
 import UnreadOnFavicon from "./plugins/unreadOnFavicon";
 import MoveSidebar from "./plugins/moveSidebar";
+import ShowDetailsOnChannelChange from "./plugins/showDetailsOnChannelChange";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -25,4 +26,5 @@ export default {
     doNotOpenLinksOnApp: DoNotOpenLinksOnApp,
     unreadOnFavicon: UnreadOnFavicon,
     moveSidebar: MoveSidebar,
+    showDetailsOnChannelChange: ShowDetailsOnChannelChange,
 };

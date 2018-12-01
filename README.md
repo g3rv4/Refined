@@ -21,6 +21,11 @@ will generate:
 
 ## Changelog
 
+### 2.1.2
+
+* Bugfix: Don't show the mute link when clicking on the notifications bell (ouch!)
+* Add ability to show the channel info on channel change
+
 ### 2.1.1
 
 * Bugfix when editing a message: If it has a non-formatted link, don't break it.

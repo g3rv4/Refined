@@ -50,6 +50,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     moveSidebar: {
                         enabled: false
                     },
+                    showDetailsOnChannelChange: {
+                        enabled: false
+                    }
                 };
             } else {
                 // it"s a fresh install, load the defaults
@@ -93,7 +96,10 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     moveSidebar: {
                         enabled: false
-                    }
+                    },
+                    showDetailsOnChannelChange: {
+                        enabled: false
+                    },
                 };
             }
             chrome.storage.sync.set({
@@ -106,11 +112,15 @@ chrome.runtime.onInstalled.addListener(d => {
             // new plugins
             if (pluginSettings.unreadOnFavicon === undefined) {
                 pluginUpdated = true;
-                pluginSettings.unreadOnFavicon = false;
+                pluginSettings.unreadOnFavicon = { enabled: false };
             }
             if (pluginSettings.moveSidebar === undefined) {
                 pluginUpdated = true;
-                pluginSettings.moveSidebar = false;
+                pluginSettings.moveSidebar = { enabled: false };
+            }
+            if (pluginSettings.showDetailsOnChannelChange === undefined) {
+                pluginUpdated = true;
+                pluginSettings.showDetailsOnChannelChange = { enabled: false };
             }
 
             if (pluginUpdated) {
