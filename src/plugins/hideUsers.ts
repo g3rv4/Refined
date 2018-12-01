@@ -6,7 +6,7 @@ export default class HideUsers extends MessageTweakerPlugin {
 
     private get hidden_ids(): string[] {
         if (!this._hidden_ids) {
-            this._hidden_ids = this.settings.hidden_ids.filter(i => i.startsWith("*.") || i.startsWith(`${this._team_id}.`))
+            this._hidden_ids = this.settings.hidden_ids.filter(i => i && i.startsWith("*.") || i.startsWith(`${this._team_id}.`))
                 .map(i => i.split(".").pop());
         }
         return this._hidden_ids;
@@ -244,13 +244,17 @@ export default class HideUsers extends MessageTweakerPlugin {
             { childList: true, attributes: false, subtree: false },
             (nodes, _) => {
                 const reactModal = nodes.filter(n => n.classList && n.classList.contains("ReactModalPortal"))[0];
-                if (reactModal) {
+                const lastClicked = this.getLocalValue("last_clicked");
+                if (reactModal && lastClicked) {
+                    // unsetting this one prevents the mute button from being added in other ReactModalPortals
+                    this.setLocalValue("last_clicked", undefined);
+
                     const div = document.createElement("div");
                     div.className = "c-menu_item__li";
 
                     const btn = document.createElement("button");
                     btn.onclick = _ => {
-                        const userId = this.getLocalValue("last_clicked");
+                        const userId = lastClicked;
                         window.postMessage({
                             type: `taut.${this.name}.mute`,
                             userId
