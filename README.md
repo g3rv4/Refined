@@ -1,10 +1,10 @@
-# Taut :unicorn:
+# Refined :unicorn:
 
-An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/taut-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/taut-a-tool-for-slack/) and [Opera](https://addons.opera.com/en/extensions/details/taut-a-tool-for-slack/).
+An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/refined-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/refined-a-tool-for-slack/) and [Opera](https://addons.opera.com/en/extensions/details/taut-a-tool-for-slack/).
 
 ## Features
 
-Check all the features [on its website](https://taut.rocks) :)
+Check all the features [on its website](https://refined.chat) :)
 
 ## Build from source
 
@@ -20,6 +20,10 @@ will generate:
 * A `dist/ff` folder. You can [load it temporarily on Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Temporary_Installation_in_Firefox).
 
 ## Changelog
+
+### 2.2
+
+* Renamed it to Refined - a tool for Slack. Again.
 
 ### 2.1.2
 

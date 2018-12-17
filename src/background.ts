@@ -137,7 +137,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         chrome.pageAction.show(sender.tab.id);
     } else if (request.type === "closeThisTab") {
         chrome.tabs.remove(sender.tab.id);
-    } else if (request.type.startsWith("taut.")) {
+    } else if (request.type.startsWith("refined.")) {
         const parts = request.type.split(".");
         const potentialClass = availablePlugins[parts[1]];
 

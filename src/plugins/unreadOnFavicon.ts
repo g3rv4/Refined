@@ -7,13 +7,13 @@ export default class UnreadOnFavicon extends BaseMessageCounterPlugin {
             (n, _) => {
                 const favicon = n.filter(n => n.id === "favicon")[0];
                 if (favicon) {
-                    let tautFavicon = document.getElementById("taut-favicon") as HTMLLinkElement;
-                    if (!tautFavicon) {
-                        tautFavicon = document.createElement("link");
-                        tautFavicon.id = "taut-favicon";
-                        tautFavicon.rel = "shortcut icon";
-                        tautFavicon.type = "image/png";
-                        document.head.appendChild(tautFavicon);
+                    let refinedFavicon = document.getElementById("refined-favicon") as HTMLLinkElement;
+                    if (!refinedFavicon) {
+                        refinedFavicon = document.createElement("link");
+                        refinedFavicon.id = "refined-favicon";
+                        refinedFavicon.rel = "shortcut icon";
+                        refinedFavicon.type = "image/png";
+                        document.head.appendChild(refinedFavicon);
                     }
 
                     this.unreadChanged();
@@ -30,11 +30,11 @@ export default class UnreadOnFavicon extends BaseMessageCounterPlugin {
         // remove the rel attribute so that it uses my favicon
         originalFavicon.rel = "";
 
-        const tautFavicon = document.getElementById("taut-favicon") as HTMLLinkElement;
+        const refinedFavicon = document.getElementById("refined-favicon") as HTMLLinkElement;
         const currentUnread = this.getLocalValue("currentUnread");
         if (!currentUnread) {
             // use the original one!
-            tautFavicon.href = originalFavicon.href;
+            refinedFavicon.href = originalFavicon.href;
             return;
         }
 
@@ -52,7 +52,7 @@ export default class UnreadOnFavicon extends BaseMessageCounterPlugin {
             const currentUnread = this.getLocalValue("currentUnread");
             if (!currentUnread) {
                 // use the original one!
-                tautFavicon.href = originalFavicon.href;
+                refinedFavicon.href = originalFavicon.href;
                 return;
             }
 
@@ -70,7 +70,7 @@ export default class UnreadOnFavicon extends BaseMessageCounterPlugin {
             context.fillText(currentUnread, canvas.width - 2, canvas.height);
 
             // Replace favicon
-            tautFavicon.href = canvas.toDataURL("image/png");
+            refinedFavicon.href = canvas.toDataURL("image/png");
         };
     }
 }

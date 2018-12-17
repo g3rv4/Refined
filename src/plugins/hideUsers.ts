@@ -170,7 +170,7 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                                         if (userIds.length) {
                                             window.postMessage({
-                                                type: `taut.${this.name}.unmute`,
+                                                type: `refined.${this.name}.unmute`,
                                                 userIds
                                             }, "*");
                                         }
@@ -203,8 +203,8 @@ export default class HideUsers extends MessageTweakerPlugin {
 
                 const teamId = this._team_id;
                 headers.forEach(h => {
-                    if (!h.dataset.taut) {
-                        h.dataset.taut = "1";
+                    if (!h.dataset.refined) {
+                        h.dataset.refined = "1";
                         h.onclick = e => {
                             const userId = e.target.href.split("/").pop();
                             this.setLocalValue("last_clicked", `${teamId}.${userId}`);
@@ -227,7 +227,7 @@ export default class HideUsers extends MessageTweakerPlugin {
                     a.onclick = _ => {
                         const userId = lastClicked;
                         window.postMessage({
-                            type: `taut.${this.name}.mute`,
+                            type: `refined.${this.name}.mute`,
                             userId
                         }, "*");
                     };
@@ -256,7 +256,7 @@ export default class HideUsers extends MessageTweakerPlugin {
                     btn.onclick = _ => {
                         const userId = lastClicked;
                         window.postMessage({
-                            type: `taut.${this.name}.mute`,
+                            type: `refined.${this.name}.mute`,
                             userId
                         }, "*");
                     };

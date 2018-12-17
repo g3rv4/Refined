@@ -78,32 +78,32 @@ export default abstract class BasePlugin {
 
     private setValue(key: string, value: any, namespace?: string) {
         const w = window as any;
-        if (!w.Taut) {
-            w.Taut = {};
+        if (!w.Refined) {
+            w.Refined = {};
         }
 
-        let dest = w.Taut;
+        let dest = w.Refined;
         if (namespace) {
-            if (!w.Taut[namespace]) {
-                w.Taut[namespace] = {};
+            if (!w.Refined[namespace]) {
+                w.Refined[namespace] = {};
             }
-            dest = w.Taut[namespace];
+            dest = w.Refined[namespace];
         }
         dest[key] = value;
     }
 
     private getValue(key: string, namespace?: string) {
         const w = window as any;
-        if (!w.Taut) {
+        if (!w.Refined) {
             return undefined;
         }
 
-        let source = w.Taut;
+        let source = w.Refined;
         if (namespace) {
-            if (!w.Taut[namespace]) {
+            if (!w.Refined[namespace]) {
                 return undefined;
             }
-            source = w.Taut[namespace];
+            source = w.Refined[namespace];
         }
         return source[key];
     }

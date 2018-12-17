@@ -1,6 +1,6 @@
 {
-  "name": "taut",
-  "version": "2.1.2",
+  "name": "refined",
+  "version": "2.2.0",
   "description": "Chrome extension to tweak Slack",
   "main": "index.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/g3rv4/Taut.git"
+    "url": "https://github.com/g3rv4/Refined.git"
   },
   "author": "Gervasio Marchand",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/g3rv4/Taut/issues"
+    "url": "https://github.com/g3rv4/Refined/issues"
   },
-  "homepage": "https://github.com/g3rv4/Taut#readme",
+  "homepage": "https://github.com/g3rv4/Refined#readme",
   "dependencies": {
     "@types/chrome": "0.0.72",
     "grunt": "^1.0.3",

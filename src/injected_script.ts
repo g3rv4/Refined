@@ -1,7 +1,7 @@
 import BasePlugin from "./plugins/basePlugin";
 import availablePlugins from "./available_plugins";
 
-const thisScript = document.getElementById("taut-injected-script");
+const thisScript = document.getElementById("refined-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
 let css = "";

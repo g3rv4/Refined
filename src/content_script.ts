@@ -1,5 +1,5 @@
 window.addEventListener("message", event => {
-    if (event.source === window && event.data && event.data.type && event.data.type.startsWith("taut.")) {
+    if (event.source === window && event.data && event.data.type && event.data.type.startsWith("refined.")) {
         chrome.runtime.sendMessage(event.data);
     }
 });
@@ -14,7 +14,7 @@ chrome.storage.sync.get(["acceptedRisks", "pluginSettings"], res => {
     injectedScript.innerText = `(${loadContent.toString()})()`;
     injectedScript.type = "text/javascript";
     injectedScript.dataset.settings = res.pluginSettings;
-    injectedScript.id = "taut-injected-script";
+    injectedScript.id = "refined-injected-script";
     document.head.appendChild(injectedScript);
 });
 
