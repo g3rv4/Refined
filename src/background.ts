@@ -52,6 +52,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     showDetailsOnChannelChange: {
                         enabled: false
+                    },
+                    postThreadMessagesOnChannel: {
+                        enabled: false
                     }
                 };
             } else {
@@ -121,6 +124,10 @@ chrome.runtime.onInstalled.addListener(d => {
             if (pluginSettings.showDetailsOnChannelChange === undefined) {
                 pluginUpdated = true;
                 pluginSettings.showDetailsOnChannelChange = { enabled: false };
+            }
+            if (pluginSettings.postThreadMessagesOnChannel === undefined) {
+                pluginUpdated = true;
+                pluginSettings.postThreadMessagesOnChannel = { enabled: false };
             }
 
             if (pluginUpdated) {
