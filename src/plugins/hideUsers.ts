@@ -186,7 +186,7 @@ export default class HideUsers extends MessageTweakerPlugin {
     }
 
     private addMuteActionsToPopup() {
-        // listen to the click on a username so that we know who we"re talking about
+        // listen to the click on a username so that we know who we're talking about
         this.setUpObserver(".client_main_container",
             { childList: true, attributes: false, subtree: true },
             (nodes, _) => {
@@ -275,11 +275,17 @@ export default class HideUsers extends MessageTweakerPlugin {
                     div2.className = "c-menu_item__label";
                     div2.innerText = "Mute";
 
-                    const items = reactModal.querySelector(".c-menu__items");
-                    if (items) {
+                    // it takes a bit for the popup to be created, keep on retrying
+                    const interval = setInterval(() => {
+                        const items = reactModal.querySelector(".c-menu__items");
+                        if (!items) {
+                            return;
+                        }
+                        clearInterval(interval);
+
                         const secondDivider = items.querySelectorAll(".c-menu_separator__li")[1];
                         items.insertBefore(div, secondDivider);
-                    }
+                    }, 200);
                 }
             }
         );
