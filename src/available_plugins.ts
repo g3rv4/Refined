@@ -12,6 +12,7 @@ import DoNotOpenLinksOnApp from "./plugins/doNotOpenLinksOnApp";
 import UnreadOnFavicon from "./plugins/unreadOnFavicon";
 import MoveSidebar from "./plugins/moveSidebar";
 import ShowDetailsOnChannelChange from "./plugins/showDetailsOnChannelChange";
+import PostThreadMessagesOnChannel from "./plugins/postThreadMessagesOnChannel";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -27,4 +28,5 @@ export default {
     unreadOnFavicon: UnreadOnFavicon,
     moveSidebar: MoveSidebar,
     showDetailsOnChannelChange: ShowDetailsOnChannelChange,
+    postThreadMessagesOnChannel: PostThreadMessagesOnChannel
 };
