@@ -21,6 +21,11 @@ will generate:
 
 ## Changelog
 
+### 2.2.1
+
+* Fix on the mute users plugin: The first time you tried to mute a bot it wouldn't show the Mute link. You had to close the pop up and open it again. This is now fixed
+* Add a new plugin to broadcast the thread messages to the channel
+
 ### 2.2
 
 * Renamed it to Refined - a tool for Slack. Again.

@@ -1,7 +1,7 @@
 {
   "name": "refined",
-  "version": "2.2.0",
-  "description": "Chrome extension to tweak Slack",
+  "version": "2.2.1",
+  "description": "a browser extension to tweak Slack",
   "main": "index.js",
   "scripts": {
     "watch": "grunt",
