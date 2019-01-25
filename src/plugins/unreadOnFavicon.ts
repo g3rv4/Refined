@@ -46,6 +46,7 @@ export default class UnreadOnFavicon extends BaseMessageCounterPlugin {
 
         const context = canvas.getContext("2d");
         const img = document.createElement("img");
+        img.crossOrigin = "anonymous";
         img.src = originalFavicon.href;
 
         img.onload = () => {
