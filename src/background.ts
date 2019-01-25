@@ -103,6 +103,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     showDetailsOnChannelChange: {
                         enabled: false
                     },
+                    changeBoldAndItalics: {
+                        enabled: false
+                    },
                 };
             }
             chrome.storage.sync.set({
@@ -128,6 +131,10 @@ chrome.runtime.onInstalled.addListener(d => {
             if (pluginSettings.postThreadMessagesOnChannel === undefined) {
                 pluginUpdated = true;
                 pluginSettings.postThreadMessagesOnChannel = { enabled: false };
+            }
+            if (pluginSettings.changeBoldAndItalics === undefined) {
+                pluginUpdated = true;
+                pluginSettings.changeBoldAndItalics = { enabled: false };
             }
 
             if (pluginUpdated) {

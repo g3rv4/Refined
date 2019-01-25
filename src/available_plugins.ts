@@ -13,6 +13,7 @@ import UnreadOnFavicon from "./plugins/unreadOnFavicon";
 import MoveSidebar from "./plugins/moveSidebar";
 import ShowDetailsOnChannelChange from "./plugins/showDetailsOnChannelChange";
 import PostThreadMessagesOnChannel from "./plugins/postThreadMessagesOnChannel";
+import ChangeBoldAndItalics from "./plugins/changeBoldAndItalics";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -28,5 +29,6 @@ export default {
     unreadOnFavicon: UnreadOnFavicon,
     moveSidebar: MoveSidebar,
     showDetailsOnChannelChange: ShowDetailsOnChannelChange,
-    postThreadMessagesOnChannel: PostThreadMessagesOnChannel
+    postThreadMessagesOnChannel: PostThreadMessagesOnChannel,
+    changeBoldAndItalics: ChangeBoldAndItalics,
 };
