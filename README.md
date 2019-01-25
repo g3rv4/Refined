@@ -21,6 +21,11 @@ will generate:
 
 ## Changelog
 
+### 2.2.2
+
+* Fix the counter on the favicon (broken after Slack's logo update)
+* Add ability to use sane bold and italics markdown (`*this test can be italic*` and `**this one can be bold**`)
+
 ### 2.2.1
 
 * Fix on the mute users plugin: The first time you tried to mute a bot it wouldn't show the Mute link. You had to close the pop up and open it again. This is now fixed
