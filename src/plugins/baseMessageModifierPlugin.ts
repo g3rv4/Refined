@@ -38,24 +38,33 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
                 const textBlocksRegex = new RegExp(w.TSF.pre_rx.r);
                 const blocks = text.match(textBlocksRegex);
 
-                for (let i = 0; i < blocks.length; i++) {
-                    text = text.replace(blocks[i], `||block${i}||`);
+                if (blocks) {
+                    for (let i = 0; i < blocks.length; i++) {
+                        text = text.replace(blocks[i], `||block${i}||`);
+                    }
                 }
 
                 const codeRegex = new RegExp(w.TSF.code_rx.r);
                 const code = text.match(codeRegex);
-                for (let i = 0; i < code.length; i++) {
-                    text = text.replace(code[i], `||code${i}||`);
+
+                if (code) {
+                    for (let i = 0; i < code.length; i++) {
+                        text = text.replace(code[i], `||code${i}||`);
+                    }
                 }
 
                 w.TS.format.formatWithOptions(text);
                 text = this.doChange(text);
 
-                for (let i = 0; i < code.length; i++) {
-                    text = text.replace(`||code${i}||`, code[i]);
+                if (code) {
+                    for (let i = 0; i < code.length; i++) {
+                        text = text.replace(`||code${i}||`, code[i]);
+                    }
                 }
-                for (let i = 0; i < blocks.length; i++) {
-                    text = text.replace(`||block${i}||`, blocks[i]);
+                if (blocks) {
+                    for (let i = 0; i < blocks.length; i++) {
+                        text = text.replace(`||block${i}||`, blocks[i]);
+                    }
                 }
 
                 e.set(key, text);
