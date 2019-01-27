@@ -21,10 +21,14 @@ will generate:
 
 ## Changelog
 
+### 2.2.3
+
+* Bugfix: Do not modify anything inside a code block. [See issue](https://github.com/g3rv4/Refined/issues/20)
+
 ### 2.2.2
 
 * Fix the counter on the favicon (broken after Slack's logo update)
-* Add ability to use sane bold and italics markdown (`*this test can be italic*` and `**this one can be bold**`)
+* Add ability to use sane bold and italics markdown (`*this test can be italic*` and `**this one can be bold**`). [See issue](https://github.com/g3rv4/Refined/issues/19)
 
 ### 2.2.1
 
