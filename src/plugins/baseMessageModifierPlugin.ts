@@ -36,35 +36,27 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
 
                 const w = window as any;
                 const textBlocksRegex = new RegExp(w.TSF.pre_rx.r);
-                const blocks = text.match(textBlocksRegex);
+                const blocks = text.match(textBlocksRegex) || [];
 
-                if (blocks) {
-                    for (let i = 0; i < blocks.length; i++) {
-                        text = text.replace(blocks[i], `||block${i}||`);
-                    }
+                for (let i = 0; i < blocks.length; i++) {
+                    text = text.replace(blocks[i], `||refinedBlock${i}||`);
                 }
 
                 const codeRegex = new RegExp(w.TSF.code_rx.r);
-                const code = text.match(codeRegex);
+                const code = text.match(codeRegex) || [];
 
-                if (code) {
-                    for (let i = 0; i < code.length; i++) {
-                        text = text.replace(code[i], `||code${i}||`);
-                    }
+                for (let i = 0; i < code.length; i++) {
+                    text = text.replace(code[i], `||refinedCode${i}||`);
                 }
 
                 w.TS.format.formatWithOptions(text);
                 text = this.doChange(text);
 
-                if (code) {
-                    for (let i = 0; i < code.length; i++) {
-                        text = text.replace(`||code${i}||`, code[i]);
-                    }
+                for (let i = 0; i < code.length; i++) {
+                    text = text.replace(`||refinedCode${i}||`, code[i]);
                 }
-                if (blocks) {
-                    for (let i = 0; i < blocks.length; i++) {
-                        text = text.replace(`||block${i}||`, blocks[i]);
-                    }
+                for (let i = 0; i < blocks.length; i++) {
+                    text = text.replace(`||refinedBlock${i}||`, blocks[i]);
                 }
 
                 e.set(key, text);
