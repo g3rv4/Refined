@@ -15,6 +15,9 @@ export default class MaintainThreadToChannel extends BasePlugin {
                     [...document.getElementsByClassName("reply_broadcast_toggle")].forEach(el => {
                         (el as any).checked = true;
                     });
+                    [...document.getElementsByClassName("p-threads_footer__broadcast_checkbox")].forEach(el => {
+                        (el as any).checked = true;
+                    });
                 }
                 oldSend(e);
             };
