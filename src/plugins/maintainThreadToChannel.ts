@@ -13,10 +13,10 @@ export default class MaintainThreadToChannel extends BasePlugin {
             const send = e => {
                 if (e.get("reply_broadcast") === "true") {
                     [...document.getElementsByClassName("reply_broadcast_toggle")].forEach(el => {
-                        (el as any).checked = true;
+                        this.updateReactCheckbox(el as HTMLInputElement, true);
                     });
                     [...document.getElementsByClassName("p-threads_footer__broadcast_checkbox")].forEach(el => {
-                        (el as any).checked = true;
+                        this.updateReactCheckbox(el as HTMLInputElement, true);
                     });
                 }
                 oldSend(e);

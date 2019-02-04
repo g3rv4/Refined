@@ -76,6 +76,14 @@ export default abstract class BasePlugin {
         return this.getValue(key);
     }
 
+    protected updateReactCheckbox(checkbox: HTMLInputElement, value: boolean) {
+        checkbox.checked = value;
+        const event = new Event("click", { bubbles: true });
+
+        (checkbox as any)._valueTracker.setValue(!value.toString());
+        checkbox.dispatchEvent(event);
+    }
+
     private setValue(key: string, value: any, namespace?: string) {
         const w = window as any;
         if (!w.Refined) {

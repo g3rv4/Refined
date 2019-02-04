@@ -9,7 +9,7 @@ export default class ThreadToChannel extends BasePlugin {
                 for (const container of containers) {
                     const checkbox = container.querySelector('input[type="checkbox"]');
                     if (checkbox) {
-                        checkbox.checked = true;
+                        this.updateReactCheckbox(checkbox, true);
                     }
                 }
             });
