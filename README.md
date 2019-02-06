@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.2.4
+
+* Broadcast message to thread: make it moar better! on hover it shows all the messages in the same convo + avoid wasting lots of vertical spacing.
+
 ### 2.2.3
 
 * Bugfix: Do not modify anything inside a code block. [See issue](https://github.com/g3rv4/Refined/issues/20)
