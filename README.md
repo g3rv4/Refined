@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.2.5
+
+* Broadcast message to thread: make it moar moar better! now it shows the broadcasted messages on refresh :)
+
 ### 2.2.4
 
 * Broadcast message to thread: make it moar better! on hover it shows all the messages in the same convo + avoid wasting lots of vertical spacing.
