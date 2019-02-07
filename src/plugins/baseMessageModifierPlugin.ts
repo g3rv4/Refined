@@ -1,4 +1,4 @@
-import BasePlugin from "./basePlugin";
+import BasePlugin, { IXHRParameters } from "./basePlugin";
 
 export default abstract class BaseMessageModifierPlugin extends BasePlugin {
     public constructor(name: string, settings: any) {
@@ -25,8 +25,8 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
         };
     }
 
-    public interceptXHR(request, method, path, async) {
-        if (path.startsWith("/api/conversations.setTopic") || path.startsWith("/api/chat.postMessage") || path.startsWith("/api/chat.update")) {
+    public interceptXHR(request, parameters: IXHRParameters) {
+        if (parameters.path.startsWith("/api/conversations.setTopic") || parameters.path.startsWith("/api/chat.postMessage") || parameters.path.startsWith("/api/chat.update")) {
             const oldSend = request.send.bind(request);
             const send = e => {
                 // setTopic has the "topic" key, while "postMessage" and "update" use the "text" key
@@ -62,7 +62,7 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
                 e.set(key, text);
 
                 // on chat update, we need to disable their parsing logic
-                if (path.startsWith("/api/chat.update")) {
+                if (parameters.path.startsWith("/api/chat.update")) {
                     e.set("parse", "default");
                 }
 

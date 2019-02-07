@@ -31,17 +31,18 @@ if (css) {
 
 if (xhrPlugins.length) {
     const proxied = w.XMLHttpRequest.prototype.open;
-    w.XMLHttpRequest.prototype.open = function (method, path, async): any {
+    w.XMLHttpRequest.prototype.open = function (method: string, path: string, async: boolean): any {
         this.bindResponse = response => {
             this.__defineGetter__("responseText", () => response);
             this.__defineGetter__("response", () => response);
         };
 
+        const parameters = { method, path, async };
         for (const xhrPlugin of xhrPlugins) {
-            xhrPlugin.interceptXHR(this, method, path, async);
+            xhrPlugin.interceptXHR(this, parameters);
         }
 
-        return proxied.apply(this, [].slice.call(arguments));
+        return proxied.apply(this, [parameters.method, parameters.path, parameters.async]);
     };
 }
 

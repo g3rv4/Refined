@@ -1,4 +1,4 @@
-import BasePlugin from "./basePlugin";
+import BasePlugin, { IXHRParameters } from "./basePlugin";
 
 export default class MaintainThreadToChannel extends BasePlugin {
     public constructor(name: string, settings: any) {
@@ -7,8 +7,8 @@ export default class MaintainThreadToChannel extends BasePlugin {
         this.shouldInterceptXHR = true;
     }
 
-    public interceptXHR(request, method, path, async) {
-        if (path.startsWith("/api/chat.postMessage") || path.startsWith("/api/chat.update")) {
+    public interceptXHR(request, parameters: IXHRParameters) {
+        if (parameters.path.startsWith("/api/chat.postMessage") || parameters.path.startsWith("/api/chat.update")) {
             const oldSend = request.send.bind(request);
             const send = e => {
                 if (e.get("reply_broadcast") === "true") {

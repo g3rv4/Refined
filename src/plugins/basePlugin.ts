@@ -1,3 +1,9 @@
+export interface IXHRParameters {
+    method: string;
+    path: string;
+    async: boolean;
+}
+
 export default abstract class BasePlugin {
     protected settings: any;
     protected name: string;
@@ -16,7 +22,7 @@ export default abstract class BasePlugin {
 
     public async init(): Promise<void> { }
     public interceptWS(data: any) { return data; }
-    public interceptXHR(request, method, path, async) { }
+    public interceptXHR(request, parameters: IXHRParameters) { }
     public interceptReact(displayName, props) { return props; }
     public getCSS() { return ""; }
 
@@ -128,13 +134,13 @@ export abstract class MessageTweakerPlugin extends BasePlugin {
     protected abstract processXHRMessages(messages: any[]): any[];
     protected abstract processWSMessage(message: any): any;
 
-    public interceptXHR(request, method, path, async) {
+    public interceptXHR(request, parameters: IXHRParameters) {
         let oldListener = _ => { };
         if (request.onreadystatechange) {
             oldListener = request.onreadystatechange.bind(request);
         }
 
-        if (path === "/api/conversations.view" || path.startsWith("/api/conversations.history")) {
+        if (parameters.path === "/api/conversations.view" || parameters.path.startsWith("/api/conversations.history")) {
             request.onreadystatechange = e => {
                 if (request.readyState === 4) {
                     this.processConversations(request);

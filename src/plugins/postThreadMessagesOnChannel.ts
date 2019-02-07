@@ -1,4 +1,4 @@
-import BasePlugin from "./basePlugin";
+import BasePlugin, { IXHRParameters } from "./basePlugin";
 declare var $: any;
 
 export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
@@ -6,6 +6,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
         super(name, settings);
 
         this.shouldInterceptWS = true;
+        this.shouldInterceptXHR = true;
     }
 
     public async init(): Promise<void> {
@@ -29,6 +30,57 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
             clearInterval(interval);
             this.processMessages(matching);
         }, 500);
+    }
+
+    public interceptXHR(request, parameters: IXHRParameters) {
+        if (parameters.path.startsWith("/api/conversations.history")) {
+            parameters.path = parameters.path.replace("conversations.history", "conversations.view");
+        }
+
+        if (parameters.path.startsWith("/api/conversations.view") || parameters.path.startsWith("/api/conversations.replies")) {
+            // remove ignore_replies from the request
+            const oldSend = request.send.bind(request);
+            const send = e => {
+                e.delete("ignore_replies");
+                oldSend(e);
+            };
+            request.send = send.bind(request);
+
+            // make the response threaded messages broadcast
+            let oldListener = _ => { };
+            if (request.onreadystatechange) {
+                oldListener = request.onreadystatechange.bind(request);
+            }
+
+            request.onreadystatechange = e => {
+                if (request.readyState === 4) {
+                    this.processConversations(request);
+                }
+                oldListener(e);
+            };
+        }
+    }
+
+    private processConversations(request) {
+        let data = JSON.parse(request.responseText);
+
+        if (data.ok) {
+            if (data.history && data.history.messages) {
+                data.history.messages = this.processXHRMessages(data.history.messages);
+                data = data.history;
+            } else if (data.messages) {
+                data.messages = this.processXHRMessages(data.messages);
+            }
+            request.bindResponse(JSON.stringify(data));
+        }
+    }
+
+    private processXHRMessages(messages) {
+        for (const msg of messages.filter(m => m.type === "message" && !m.subtype && m.ts !== m.thread_ts)) {
+            msg.subtype = "thread_broadcast";
+            delete msg.parent_user_id;
+        }
+        return messages;
     }
 
     private processMessages(messages: any[]) {

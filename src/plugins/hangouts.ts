@@ -1,4 +1,4 @@
-import BasePlugin from "./basePlugin";
+import BasePlugin, { IXHRParameters } from "./basePlugin";
 
 export default class Hangouts extends BasePlugin {
     public constructor(name: string, settings: any) {
@@ -17,8 +17,8 @@ export default class Hangouts extends BasePlugin {
         return { enabled: false };
     }
 
-    public interceptXHR(request, method, path, async) {
-        if (this.settings.url && (path.startsWith("/api/chat.postMessage") || path.startsWith("/api/chat.update"))) {
+    public interceptXHR(request, parameters: IXHRParameters) {
+        if (this.settings.url && (parameters.path.startsWith("/api/chat.postMessage") || parameters.path.startsWith("/api/chat.update"))) {
             const oldSend = request.send.bind(request);
             const defaultUrl = this.settings.url;
             const send = e => {
