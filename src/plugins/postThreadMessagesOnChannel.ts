@@ -76,15 +76,17 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     }
 
     private processXHRMessages(messages) {
-        for (const msg of messages.filter(m => m.type === "message" && !m.subtype && m.ts !== m.thread_ts)) {
+        for (const msg of messages.filter(m => m.type === "message" && !m.subtype && m.thread_ts && m.ts !== m.thread_ts)) {
             msg.subtype = "thread_broadcast";
-            delete msg.parent_user_id;
         }
         return messages;
     }
 
     private processMessages(messages: any[]) {
         for (const message of messages) {
+            if (message.classList.contains("refined-message")) {
+                continue;
+            }
             const links = $('a[href*="archives"]', message);
             if (links.length) {
                 const link = links[0].href;
@@ -94,10 +96,24 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     convo_id = match[3].replace(".", "");
 
                     // it's a threaded message. Reorder the elements
-                    const threadLink = message.querySelector("a.c-message__broadcast_preamble_link");
                     const messageBody = message.querySelector(".c-message__body");
 
-                    messageBody.insertBefore(threadLink, messageBody.firstChild);
+                    if (!messageBody) {
+                        continue;
+                    }
+
+                    const newThreadLink = document.createElement("a");
+                    newThreadLink.onclick = e => {
+                        const event = new Event("click", { bubbles: true });
+                        const originalLink = newThreadLink.closest(".c-message__content").querySelector("a.c-message__broadcast_preamble_link");
+                        originalLink.dispatchEvent(event);
+                    };
+
+                    if (messageBody.firstChild) {
+                        messageBody.insertBefore(newThreadLink, messageBody.firstChild);
+                    } else {
+                        messageBody.appendChild(newThreadLink);
+                    }
 
                     // add the thread icon
                     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -110,12 +126,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     path.setAttribute("d", "M0 233.82L212.777.5v139.203h45.238C398.29 139.703 512 253.414 512 393.688v73.77l-20.094-22.02c-68.316-74.852-164.98-117.5-266.324-117.5h-12.805V467.14zm0 0");
                     svg.appendChild(path);
 
-                    // remove everything from threadLink
-                    while (threadLink.firstChild) {
-                        threadLink.removeChild(threadLink.firstChild);
-                    }
-
-                    threadLink.appendChild(svg);
+                    newThreadLink.appendChild(svg);
                 }
                 const elementsInThisConvoClass = `refined-conversation-${convo_id}`;
                 message.classList.add(elementsInThisConvoClass);
@@ -154,6 +165,10 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
 
 .c-message__broadcast_preamble {
     display: none;
+}
+
+.c-message__body svg {
+    margin-right: 5px;
 }
 
 .c-message__broadcast_preamble_link {
