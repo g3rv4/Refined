@@ -1,6 +1,6 @@
 # Refined :unicorn:
 
-An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/refined-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/refined-a-tool-for-slack/) and [Opera](https://addons.opera.com/en/extensions/details/taut-a-tool-for-slack/).
+An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/refined-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/refined-a-tool-for-slack/). Find instructions to install it on Opera [here](https://refined.chat/opera).
 
 ## Features
 
