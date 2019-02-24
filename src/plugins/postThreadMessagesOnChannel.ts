@@ -116,17 +116,9 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     }
 
                     // add the thread icon
-                    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    svg.setAttribute("viewBox", "0 -22 512 511");
-                    svg.setAttribute("width", "15px");
-                    svg.setAttribute("height", "15px");
-                    svg.setAttribute("style", "fill: #1d1c1d");
-
-                    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                    path.setAttribute("d", "M0 233.82L212.777.5v139.203h45.238C398.29 139.703 512 253.414 512 393.688v73.77l-20.094-22.02c-68.316-74.852-164.98-117.5-266.324-117.5h-12.805V467.14zm0 0");
-                    svg.appendChild(path);
-
-                    newThreadLink.appendChild(svg);
+                    const img = document.createElement("img");
+                    img.setAttribute("src", (window as any).refinedBaseUrl + "images/arrow.svg");
+                    newThreadLink.appendChild(img);
                 }
                 const elementsInThisConvoClass = `refined-conversation-${convo_id}`;
                 message.classList.add(elementsInThisConvoClass);
@@ -171,7 +163,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     display: none;
 }
 
-.c-message__body svg {
+.c-message__body img {
     margin-right: 5px;
 }
 

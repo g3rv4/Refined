@@ -14,6 +14,7 @@ chrome.storage.sync.get(["acceptedRisks", "pluginSettings"], res => {
     injectedScript.innerText = `(${loadContent.toString()})()`;
     injectedScript.type = "text/javascript";
     injectedScript.dataset.settings = res.pluginSettings;
+    injectedScript.dataset.extensionBaseUrl = chrome.runtime.getURL("");
     injectedScript.id = "refined-injected-script";
     document.head.appendChild(injectedScript);
 });

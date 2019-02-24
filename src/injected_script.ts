@@ -3,6 +3,7 @@ import availablePlugins from "./available_plugins";
 
 const thisScript = document.getElementById("refined-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
+const baseUrl = thisScript.dataset.extensionBaseUrl;
 
 let css = "";
 const plugins = Object.keys(settings);
@@ -21,6 +22,7 @@ const xhrPlugins = enabledPlugins.filter(p => p.shouldInterceptXHR);
 const reactPlugins = enabledPlugins.filter(p => p.shouldInterceptReact);
 
 const w: any = window;
+w.refinedBaseUrl = baseUrl;
 if (css) {
     const sheet = document.createElement("style");
     sheet.type = "text/css";
