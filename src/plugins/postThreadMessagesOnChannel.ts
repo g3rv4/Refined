@@ -143,8 +143,12 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     }
 
     public interceptWS(data: any) {
-        if (data.type === "message" && data.thread_ts) {
-            data.subtype = "thread_broadcast";
+        if (data.type === "message") {
+            if (data.thread_ts) {
+                data.subtype = "thread_broadcast";
+            } else if (data.subtype === "message_changed") {
+                data.message = this.processXHRMessages([data.message])[0];
+            }
         }
         return data;
     }
