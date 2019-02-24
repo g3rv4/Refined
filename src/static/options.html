@@ -4,51 +4,15 @@
 <head>
     <title>Refined - a tool for Slack</title>
     <meta charset="utf-8"/>
+    <link href="options.css" rel="stylesheet" type="text/css">
 </head>
-<style>
-.loading {
-    display: none;
-}
-
-.full-page, .full-page body {
-    height: 100%;
-}
-
-.full-page td, .full-page th {
-    width: 50%;
-}
-
-.popup .hide-popup,
-.full-page .hide-full-page,
-.not-accepted .hide-before-accepting,
-.accepted .hide-after-accepting
-{
-    display: none;
-}
-
-.container {
-    min-width: 500px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-table {
-    width: 500px;
-}
-
-th {
-    text-align: right;
-}
-</style>
 
 <body>
     <form id="the-form" class="container" method="POST" action="">
         <table>
             <tbody class="hide-popup">
                 <tr>
-                    <td colspan="2" style="text-align: center"><img src="images/icon440.jpg" /></th>
+                    <td colspan="2" class="tacenter"><img src="images/icon440.jpg" /></th>
                 </tr>
             </tbody>
             <tbody class="hide-before-accepting">
@@ -57,7 +21,7 @@ th {
                     <td><input type="text" name="hangouts.url" id="hangouts.url" /></td>
                 </tr>
                 <tr>
-                    <th><label for="postThreadMessagesOnChannel.enabled"><span style="color: red">(new and amazing)</span> Visible Threads</label></th>
+                    <th><label for="postThreadMessagesOnChannel.enabled"><span class="cred">(new and amazing)</span> Visible Threads</label></th>
                     <td><input type="checkbox" name="postThreadMessagesOnChannel.enabled" id="postThreadMessagesOnChannel.enabled" value="1" /> <a href="https://refined.chat/visible-threads">what are Visible Threads?</a></td>
                 </tr>
                 <tr>
@@ -119,7 +83,7 @@ th {
             </tbody>
             <tbody class="hide-popup hide-before-accepting">
                 <tr>
-                    <td colspan="2" style="text-align: center;">
+                    <td colspan="2" class="tacenter">
                         <input type="submit" value="Save" />
                     </td>
                 </tr>
@@ -134,24 +98,24 @@ th {
             </tbody>
             <tbody class="hide-full-page hide-before-accepting">
                 <tr>
-                    <td colspan="2" style="text-align: right;font-size: 0.8em">&nbsp;<br/>Issues? comments? questions? visit <a href="https://refined.chat">refined.chat</a></td>
+                    <td colspan="2" class="taright fs08">&nbsp;<br/>Issues? comments? questions? visit <a href="https://refined.chat">refined.chat</a></td>
                 </tr>
             </tbody>
             <tbody class="hide-after-accepting">
                 <tr>
-                    <td colspan="2" style="text-align: center">This extension may break your Slack experience. Maybe
+                    <td colspan="2" class="tacenter">This extension may break your Slack experience. Maybe
                         not today, maybe not tomorrow... but if you see errors on Slack, disable this extension and try
                         again. If doing that fixes the problem, <a href="https://refined.chat">let me know</a>.</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="text-align: center; font-weight: bold;">This extension is not officially
+                    <td colspan="2" class="tacenter fwbold">This extension is not officially
                         supported by Slack and
                         is not listed in the Slack App Directory. Your data - including messages, files, and profile
                         information for all workspace members - may be exposed to the developer, so understand the
                         risks before installation.</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="text-align:center">
+                    <td colspan="2" class="tacenter">
                         &nbsp;<br />
                         <input type="button" value="I don't want to continue. Uninstall the extension." id="uninstall" />
                         <br />&nbsp;<br />

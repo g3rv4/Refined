@@ -1,0 +1,55 @@
+.loading {
+    display: none;
+}
+
+.full-page, .full-page body {
+    height: 100%;
+}
+
+.full-page td, .full-page th {
+    width: 50%;
+}
+
+.popup .hide-popup,
+.full-page .hide-full-page,
+.not-accepted .hide-before-accepting,
+.accepted .hide-after-accepting
+{
+    display: none;
+}
+
+.container {
+    min-width: 500px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+    width: 500px;
+}
+
+th {
+    text-align: right;
+}
+
+.tacenter {
+    text-align: center;
+}
+
+.taright {
+    text-align: right;
+}
+
+.cred {
+    color: red;
+}
+
+.fs08 {
+    font-size: 0.8em;
+}
+
+.fwbold {
+    font-weight: bold;
+}

@@ -47,5 +47,6 @@
     ],
     "web_accessible_resources": [
       "images/arrow.svg"
-    ]
+    ],
+    "content_security_policy": "default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:;"
 }
