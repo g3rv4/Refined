@@ -10,24 +10,14 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     }
 
     public async init(): Promise<void> {
-        this.setUpObserver("#messages_container",
-            { attributes: true, childList: true, subtree: true },
-            (nodes, _) => {
-                const messages = nodes.filter(n => n.className && n.classList.contains("c-virtual_list__item")
-                    && !n.classList.contains("refined-message")
-                    && n.querySelector(".c-message"));
-
-                this.processMessages(messages);
-            });
-
-        // deal with the messages that are primed on first load
-        const interval = setInterval(() => {
+        // from time to time there are messages recreated in the DOM and an observer on #messages_container wasn't enough
+        // (see https://github.com/g3rv4/Refined/issues/23). This makes the check every half a second
+        setInterval(() => {
             // css selectors don't support :has yet... so let's use jquery
             const matching = $(".c-virtual_list__item:not(.refined):has(> .c-message)").toArray();
             if (!matching.length) {
                 return;
             }
-            clearInterval(interval);
             this.processMessages(matching);
         }, 500);
     }
