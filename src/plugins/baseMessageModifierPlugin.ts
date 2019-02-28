@@ -11,9 +11,14 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
     protected abstract undoChange(t: string): string;
 
     public async init(): Promise<void> {
-        const old = await this.getElement(() => {
+        const oldFormatWithOptions = await this.getElement(() => {
             const w = window as any;
             return w.TS && w.TS.format && w.TS.format.formatWithOptions;
+        });
+
+        const oldGetTokensString = await this.getElement(() => {
+            const w = window as any;
+            return w.TSF && w.TSF.getTokensString;
         });
 
         const w = window as any;
@@ -21,7 +26,13 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
             if (r && r.for_edit) {
                 t = this.undoChange(t);
             }
-            return old(t, n, r);
+            return oldFormatWithOptions(t, n, r);
+        };
+        w.TSF.getTokensString = (e, l, r) => {
+            if (l === "EDIT") {
+                e = this.undoChange(e);
+            }
+            return oldGetTokensString(e, l, r);
         };
     }
 
