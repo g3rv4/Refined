@@ -10,6 +10,16 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     }
 
     public async init(): Promise<void> {
+        this.setUpObserver("#messages_container",
+        { attributes: true, childList: true, subtree: true },
+        (nodes, _) => {
+            const messages = nodes.filter(n => n.className && n.classList.contains("c-virtual_list__item")
+                && !n.classList.contains("refined-message")
+                && n.querySelector(".c-message"));
+
+            this.processMessages(messages);
+        });
+
         // from time to time there are messages recreated in the DOM and an observer on #messages_container wasn't enough
         // (see https://github.com/g3rv4/Refined/issues/23). This makes the check every half a second
         setInterval(() => {
