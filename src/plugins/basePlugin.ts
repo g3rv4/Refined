@@ -140,7 +140,7 @@ export abstract class MessageTweakerPlugin extends BasePlugin {
             oldListener = request.onreadystatechange.bind(request);
         }
 
-        if (parameters.path === "/api/conversations.view" || parameters.path.startsWith("/api/conversations.history")) {
+        if (parameters.path.startsWith("/api/conversations.view") || parameters.path.startsWith("/api/conversations.history")) {
             request.onreadystatechange = e => {
                 if (request.readyState === 4) {
                     this.processConversations(request);
