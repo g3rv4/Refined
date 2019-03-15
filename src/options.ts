@@ -121,3 +121,6 @@ if (document.URL.indexOf("fullpage=1") !== -1) {
 } else {
     html.classList.add("popup");
 }
+
+const manifestData = chrome.runtime.getManifest();
+document.getElementById("version").innerText = manifestData.version;
