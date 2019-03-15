@@ -65,6 +65,31 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                 oldListener(e);
             };
         }
+
+        if (parameters.path.startsWith("/api/subscriptions.thread.getView")) {
+            let oldListener = _ => { };
+            if (request.onreadystatechange) {
+                oldListener = request.onreadystatechange.bind(request);
+            }
+
+            request.onreadystatechange = e => {
+                if (request.readyState === 4) {
+                    this.processThreadView(request);
+                }
+                oldListener(e);
+            };
+        }
+    }
+
+    private processThreadView(request) {
+        const data = JSON.parse(request.responseText);
+
+        if (data.ok) {
+            for (const thread of data.threads) {
+                thread.latest_replies = this.processXHRMessages(thread.latest_replies);
+            }
+            request.bindResponse(JSON.stringify(data));
+        }
     }
 
     private processConversations(request) {
