@@ -24,9 +24,15 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
         // (see https://github.com/g3rv4/Refined/issues/23). This makes the check every half a second
         setInterval(() => {
             // css selectors don't support :has yet... so let's use jquery
-            const matching = $(".c-virtual_list__item:not(.refined):has(> .c-message)").toArray();
+            let matching = $(".c-virtual_list__item:not(.refined-message):has(> .c-message)").toArray();
             if (!matching.length) {
-                return;
+                // check if some messages have the class but don't have the link
+                matching = $(".c-virtual_list__item.refined-should-have-arrow:not(:has(.refined-expand-thread-link))").toArray();
+                if (!matching.length) {
+                    return;
+                }
+
+                this.processMessages(matching, true);
             }
             this.processMessages(matching);
         }, 500);
@@ -82,9 +88,12 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
         return messages;
     }
 
-    private processMessages(messages: any[]) {
+    private processMessages(messages: any[], addArrow?: boolean) {
+        if (addArrow === undefined) {
+            addArrow = false;
+        }
         for (const message of messages) {
-            if (message.classList.contains("refined-message")) {
+            if (!addArrow && message.classList.contains("refined-message")) {
                 continue;
             }
             const links = $('a[href*="archives"]', message);
@@ -103,6 +112,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     }
 
                     const newThreadLink = document.createElement("a");
+                    newThreadLink.classList.add("refined-expand-thread-link");
                     newThreadLink.onclick = e => {
                         const event = new Event("click", { bubbles: true });
                         const originalLink = newThreadLink.closest(".c-message__content").querySelector("a.c-message__broadcast_preamble_link");
@@ -119,6 +129,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     const img = document.createElement("img");
                     img.setAttribute("src", (window as any).refinedBaseUrl + "images/arrow.svg");
                     newThreadLink.appendChild(img);
+                    message.classList.add("refined-should-have-arrow");
                 }
                 const elementsInThisConvoClass = `refined-conversation-${convo_id}`;
                 message.classList.add(elementsInThisConvoClass);
