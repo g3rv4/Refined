@@ -22,5 +22,4 @@ Once you disable a feature and the bug disappears, that's the feature with the b
 
 ### System configuration
 **Browser (include version)**:
-
-**Operating System (include version)**:
+**Extension version**:
