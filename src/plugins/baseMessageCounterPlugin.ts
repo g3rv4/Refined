@@ -26,9 +26,9 @@ export default abstract class BaseMessageCounterPlugin extends BasePlugin {
                         // it"s not in a thread!
                         currentUnread++;
                     }
-                } else if (data.subtype === "message_changed") {
+                } else if (data.subtype === "message_changed" && data.message.user !== slackModel.user.id) {
                     // message_changed, we still don"t know much about it
-                    if (!data.message.edited) {
+                    if (!data.hidden) {
                         // when a threaded message is sent to the chat, there"s no edited property. Are there any
                         // other instances when this happens? I have no freaking idea :)
                         currentUnread++;
