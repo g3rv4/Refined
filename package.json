@@ -28,7 +28,7 @@
     "grunt-rollup": "^9.0.0",
     "grunt-ts": "^6.0.0-beta.22",
     "grunt-tslint": "^5.0.2",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.3"
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.3333"
   }
 }
