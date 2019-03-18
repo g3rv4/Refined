@@ -14,6 +14,8 @@ import MoveSidebar from "./plugins/moveSidebar";
 import ShowDetailsOnChannelChange from "./plugins/showDetailsOnChannelChange";
 import PostThreadMessagesOnChannel from "./plugins/postThreadMessagesOnChannel";
 import ChangeBoldAndItalics from "./plugins/changeBoldAndItalics";
+import HideAllUnreads from "./plugins/hideAllUnreads";
+import HideAllThreads from "./plugins/hideAllThreads";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -31,4 +33,6 @@ export default {
     showDetailsOnChannelChange: ShowDetailsOnChannelChange,
     postThreadMessagesOnChannel: PostThreadMessagesOnChannel,
     changeBoldAndItalics: ChangeBoldAndItalics,
+    hideAllUnreads: HideAllUnreads,
+    hideAllThreads: HideAllThreads,
 };

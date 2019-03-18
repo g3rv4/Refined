@@ -55,7 +55,13 @@ chrome.runtime.onInstalled.addListener(d => {
                     },
                     postThreadMessagesOnChannel: {
                         enabled: false
-                    }
+                    },
+                    hideAllUnreads: {
+                        enabled: false
+                    },
+                    hideAllThreads: {
+                        enabled: false
+                    },
                 };
             } else {
                 // it"s a fresh install, load the defaults
@@ -106,6 +112,12 @@ chrome.runtime.onInstalled.addListener(d => {
                     changeBoldAndItalics: {
                         enabled: false
                     },
+                    hideAllUnreads: {
+                        enabled: false
+                    },
+                    hideAllThreads: {
+                        enabled: false
+                    },
                 };
             }
             chrome.storage.sync.set({
@@ -135,6 +147,11 @@ chrome.runtime.onInstalled.addListener(d => {
             if (pluginSettings.changeBoldAndItalics === undefined) {
                 pluginUpdated = true;
                 pluginSettings.changeBoldAndItalics = { enabled: false };
+            }
+            if (pluginSettings.hideAllUnreads === undefined) {
+                pluginUpdated = true;
+                pluginSettings.hideAllUnreads = { enabled: false };
+                pluginSettings.hideAllThreads = { enabled: false };
             }
 
             if (pluginUpdated) {
