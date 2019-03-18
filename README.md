@@ -21,6 +21,10 @@ will generate:
 
 ## Changelog
 
+### 2.2.6
+
+* Add the ability to hide All Unreads and All Threads from the sidebar
+
 ### 2.2.5
 
 * Broadcast message to thread: make it moar moar better! now it shows the broadcasted messages on refresh :)
