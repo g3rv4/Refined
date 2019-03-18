@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Refined - a tool for Slack",
     "description": "Mute users, use markdown links, add unread message counter to the title, move reactions to the right, disable url previews and more!",
-    "version": "2.2.5.11",
+    "version": "2.2.6",
     "options_ui": {
         "page": "options.html",
         "chrome_style": true
