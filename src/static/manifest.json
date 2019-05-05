@@ -44,8 +44,5 @@
         "storage",
         "tabs",
         "https://*.slack.com/*"
-    ],
-    "web_accessible_resources": [
-      "images/arrow.svg"
     ]
 }
