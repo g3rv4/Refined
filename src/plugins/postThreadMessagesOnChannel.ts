@@ -23,6 +23,9 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
         // from time to time there are messages recreated in the DOM and an observer on #messages_container wasn't enough
         // (see https://github.com/g3rv4/Refined/issues/23). This makes the check every half a second
         setInterval(() => {
+            if (typeof $ === "undefined") {
+                return;
+            }
             // css selectors don't support :has yet... so let's use jquery
             let matching = $(".c-virtual_list__item:not(.refined-message):has(> .c-message)").toArray();
             if (!matching.length) {
@@ -109,6 +112,11 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
     private processXHRMessages(messages) {
         for (const msg of messages.filter(m => m.type === "message" && !m.subtype && m.thread_ts && m.ts !== m.thread_ts)) {
             msg.subtype = "thread_broadcast";
+            if (msg.text === "") {
+                // this happens when somebody replies with an image only. If there's no text element, Slack doesn't
+                // render the c-message__body element where we put the arrow
+                msg.text = " ";
+            }
         }
         return messages;
     }
@@ -118,9 +126,11 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
             addArrow = false;
         }
         for (const message of messages) {
-            if (!addArrow && message.classList.contains("refined-message")) {
+            if (!addArrow && message.classList && message.classList.contains("refined-message")) {
                 continue;
             }
+
+            message.classList.add("refined-message");
             const links = $('a[href*="archives"]', message);
             if (links.length) {
                 const link = links[0].href;
@@ -133,6 +143,13 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     const messageBody = message.querySelector(".c-message__body");
 
                     if (!messageBody) {
+                        continue;
+                    }
+
+                    message.classList.add("refined-should-have-arrow");
+                    if (messageBody.firstChild && messageBody.firstChild.classList && messageBody.firstChild.classList.contains("refined-expand-thread-link")) {
+                        // this is a weird situation (like when the user focuses on a message) where the dom element
+                        // gets recreated... still, the old link is still here. Remove the old link
                         continue;
                     }
 
@@ -162,7 +179,6 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     svg.appendChild(path);
 
                     newThreadLink.appendChild(svg);
-                    message.classList.add("refined-should-have-arrow");
                 }
                 const elementsInThisConvoClass = `refined-conversation-${convo_id}`;
                 message.classList.add(elementsInThisConvoClass);
@@ -174,7 +190,6 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
                     $(`.${elementsInThisConvoClass}`).removeClass("refined-conversation-hover");
                 });
             }
-            message.classList.add("refined-message");
         }
     }
 
