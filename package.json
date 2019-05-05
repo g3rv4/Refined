@@ -18,17 +18,17 @@
   },
   "homepage": "https://github.com/g3rv4/Refined#readme",
   "dependencies": {
-    "@types/chrome": "0.0.72",
-    "grunt": "^1.0.3",
+    "@types/chrome": "0.0.83",
+    "grunt": "^1.0.4",
     "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-compress": "^1.5.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-rollup": "^9.0.0",
+    "grunt-rollup": "^10.0.0",
     "grunt-ts": "^6.0.0-beta.22",
     "grunt-tslint": "^5.0.2",
-    "tslint": "^5.14.0",
-    "typescript": "^3.3.3333"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   }
 }
