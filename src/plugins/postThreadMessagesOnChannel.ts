@@ -43,6 +43,7 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
 
     public interceptXHR(request, parameters: IXHRParameters) {
         if (parameters.path.startsWith("/api/conversations.history")) {
+            request.urlTweaked = true;
             parameters.path = parameters.path.replace("conversations.history", "conversations.view");
         }
 
@@ -101,7 +102,9 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
         if (data.ok) {
             if (data.history && data.history.messages) {
                 data.history.messages = this.processXHRMessages(data.history.messages);
-                data = data.history;
+                if (request.urlTweaked) {
+                    data = data.history;
+                }
             } else if (data.messages) {
                 data.messages = this.processXHRMessages(data.messages);
             }
