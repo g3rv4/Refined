@@ -25,6 +25,7 @@ export default abstract class BasePlugin {
     public interceptXHR(request, parameters: IXHRParameters) { }
     public interceptReact(displayName, props) { return props; }
     public getCSS() { return ""; }
+    public getDarkCSS() { return ""; }
 
     // this can be used by the plugins that only need an enable/disable switch
     public static GenerateSettingsFromForm(current: any, newSettings: any) {

@@ -5,6 +5,7 @@ const thisScript = document.getElementById("refined-injected-script");
 const settings = JSON.parse(thisScript.dataset.settings);
 
 let css = "";
+let darkcss = "";
 const plugins = Object.keys(settings);
 const enabledPlugins: BasePlugin[] = [];
 for (const pluginName of plugins) {
@@ -13,6 +14,7 @@ for (const pluginName of plugins) {
         enabledPlugins.push(plugin);
 
         css += plugin.getCSS();
+        darkcss += plugin.getDarkCSS();
     }
 }
 
@@ -23,10 +25,36 @@ const reactPlugins = enabledPlugins.filter(p => p.shouldInterceptReact);
 const w: any = window;
 if (css) {
     const sheet = document.createElement("style");
+    sheet.id = "refined-css";
     sheet.type = "text/css";
+    sheet.media = "screen";
     w.customSheet = sheet;
     (document.head || document.getElementsByTagName("head")[0]).appendChild(sheet);
     sheet.appendChild(document.createTextNode(css));
+}
+
+if (darkcss) {
+    let darkAttempts = 0;
+    const darkInterval = setInterval(() => {
+        if (document.querySelector(".darkreader") || document.querySelector(".darkslack")) {
+            const sheet = document.createElement("style");
+            sheet.id = "refined-dark-css";
+            sheet.type = "text/css";
+            sheet.media = "screen";
+            sheet.className = "darkreader darkslack";
+            w.customSheet = sheet;
+            (document.head || document.getElementsByTagName("head")[0]).appendChild(sheet);
+            sheet.appendChild(document.createTextNode(darkcss));
+
+            clearInterval(darkInterval);
+            return;
+        }
+
+        darkAttempts++;
+        if (darkAttempts > 5) {
+            clearInterval(darkInterval);
+        }
+    }, 500);
 }
 
 if (xhrPlugins.length) {

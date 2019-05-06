@@ -236,4 +236,17 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
 }
 `;
     }
+
+    public getDarkCSS() {
+        return `
+.refined-conversation-hover,
+.refined-conversation-hover .c-message--hover {
+    background: #595959 !important;
+}
+.refined-conversation-hover .c-message__reply_bar:hover,
+.refined-conversation-hover .c-message__reply_bar:hover .c-message__reply_bar_view_thread {
+    background: #393939 !important;
+}
+`;
+    }
 }
