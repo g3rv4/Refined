@@ -78,110 +78,110 @@ export default class HideUsers extends MessageTweakerPlugin {
         this.setUpObserver("body",
             { childList: true, attributes: false, subtree: false },
             (nodes, _) => {
-                const modal = nodes.filter(r => r.id === "fs_modal")[0];
-                if (modal) {
-                    // add an observer to the contents_container element
-                    const hidden_ids = this.hidden_ids;
-                    const target = modal.querySelector(".contents");
-                    if (target) {
-                        const contentObserver = new MutationObserver(async (records, _) => {
-                            const afterElement = records.map(r => [...r.addedNodes] as any)
-                                .reduce((a, b) => a.concat(b))
-                                .filter(r => r.id === "prefs_inline_media")[0];
-
-                            if (afterElement && hidden_ids.length) {
-                                const form = document.createElement("form");
-
-                                const h2 = document.createElement("h2");
-                                h2.className = "large_top_margin inline_block";
-                                h2.textContent = "Muted users";
-                                form.appendChild(h2);
-
-                                const p = document.createElement("p");
-                                form.appendChild(p);
-
-                                let users = this.getGlobalValue("users");
-                                const slackModel = this.getSlackModel();
-                                if (!users) {
-                                    const response = await fetch("https://slack.com/api/users.list?token=" + slackModel.api_token);
-                                    const json = await response.json();
-                                    users = json.members.filter(u => !u.deleted);
-                                    this.setGlobalValue("users", users);
-                                }
-
-                                let bots = this.getGlobalValue("bots");
-                                if (!bots) {
-                                    const response = await fetch("https://slack.com/api/bots.list?token=" + slackModel.api_token);
-                                    const json = await response.json();
-                                    bots = json.bots.filter(b => !b.deleted);
-                                    this.setGlobalValue("bots", bots);
-                                }
-
-                                const userIds = users.map(m => m.id);
-                                const botIds = bots.map(b => b.id);
-
-                                hidden_ids.forEach(userId => {
-                                    let muted;
-                                    if (userId[0] === "U") {
-                                        // it"s a user
-                                        if (userIds.indexOf(userId) !== -1) {
-                                            muted = users.filter(m => m.id === userId)[0];
-                                        }
-                                    } else if (userId[0] === "B") {
-                                        // it"s a bot
-                                        if (botIds.indexOf(userId) !== -1) {
-                                            muted = bots.filter(m => m.id === userId)[0];
-                                        }
-                                    }
-                                    if (muted) {
-                                        // the muted user is in this workspace!
-                                        const current = document.createElement("label");
-                                        current.className = "checkbox";
-
-                                        const input = document.createElement("input");
-                                        input.value = "1";
-                                        input.name = `${this._team_id}.${muted.id}`;
-                                        input.type = "checkbox";
-                                        current.appendChild(input);
-
-                                        const span = document.createElement("span");
-                                        span.innerText = muted.profile ? muted.profile.real_name : muted.name;
-                                        current.appendChild(span);
-
-                                        p.appendChild(current);
-                                    }
-                                });
-
-                                if (p.childElementCount > 0) {
-                                    const btn = document.createElement("button");
-                                    btn.type = "submit";
-                                    btn.className = "btn btn_outline ladda-button";
-                                    btn.innerText = "Unmute selected users";
-                                    form.appendChild(btn);
-
-                                    form.appendChild(document.createElement("hr"));
-
-                                    form.onsubmit = e => {
-                                        e.preventDefault();
-
-                                        const formData = new FormData(e.target as HTMLFormElement);
-                                        const userIds = [];
-                                        formData.forEach((_, key) => userIds.push(key));
-
-                                        if (userIds.length) {
-                                            window.postMessage({
-                                                type: `refined.${this.name}.unmute`,
-                                                userIds
-                                            }, "*");
-                                        }
-                                    };
-                                    target.insertBefore(form, afterElement);
-                                }
-                            }
-                        });
-                        contentObserver.observe(target, { childList: true, attributes: false, subtree: false });
-                    }
+                const modal = nodes.filter(r => r.classList && r.classList.contains("ReactModalPortal"))[0];
+                if (!modal) {
+                    return;
                 }
+
+                // add an observer to the contents_container element
+                const hidden_ids = this.hidden_ids;
+                const target = modal.querySelector(".p-prefs_modal__content_container");
+                if (!target) {
+                    return;
+                }
+
+                const contentObserver = new MutationObserver(async (records, _) => {
+                    const newSection = records.map(r => [...r.addedNodes] as any)
+                        .reduce((a, b) => a.concat(b))
+                        .filter(r => r.querySelector("#prefs_inline_media"))[0];
+
+                    if (!newSection) {
+                        return;
+                    }
+
+                    const afterElement = newSection.querySelectorAll('h2[data-qa="prefs_section_heading"]')[1];
+                    if (afterElement && hidden_ids.length) {
+                        const form = document.createElement("form");
+
+                        const h2 = document.createElement("h2");
+                        h2.className = "margin_bottom_100";
+                        h2.textContent = "Muted users";
+                        form.appendChild(h2);
+
+                        const p = document.createElement("p");
+                        form.appendChild(p);
+
+                        let users = this.getGlobalValue("users");
+                        const slackModel = this.getSlackModel();
+                        if (!users) {
+                            const response = await fetch("https://slack.com/api/users.list?token=" + slackModel.api_token);
+                            const json = await response.json();
+                            users = json.members.filter(u => !u.deleted);
+                            this.setGlobalValue("users", users);
+                        }
+
+                        const userIds = users.map(m => m.id);
+
+                        for (const userId of hidden_ids) {
+                            let muted;
+                            if (userId[0] === "U") {
+                                // it's a user
+                                if (userIds.indexOf(userId) !== -1) {
+                                    muted = users.filter(m => m.id === userId)[0];
+                                }
+                            } else if (userId[0] === "B") {
+                                // it's a bot
+                                const response = await fetch(`https://slack.com/api/bots.info?bot=${userId}&token=${slackModel.api_token}`);
+                                const json = await response.json();
+                                muted = json.bot;
+                            }
+                            if (muted) {
+                                // the muted user is in this workspace!
+                                const current = document.createElement("label");
+                                current.className = "checkbox";
+
+                                const input = document.createElement("input");
+                                input.value = "1";
+                                input.name = `${this._team_id}.${muted.id}`;
+                                input.type = "checkbox";
+                                current.appendChild(input);
+
+                                const span = document.createElement("span");
+                                span.innerText = muted.profile ? muted.profile.real_name : muted.name;
+                                current.appendChild(span);
+
+                                p.appendChild(current);
+                            }
+                        }
+
+                        if (p.childElementCount > 0) {
+                            const btn = document.createElement("button");
+                            btn.type = "submit";
+                            btn.className = "btn btn_outline ladda-button";
+                            btn.innerText = "Unmute selected users";
+                            form.appendChild(btn);
+
+                            form.appendChild(document.createElement("hr"));
+
+                            form.onsubmit = e => {
+                                e.preventDefault();
+
+                                const formData = new FormData(e.target as HTMLFormElement);
+                                const userIds = [];
+                                formData.forEach((_, key) => userIds.push(key));
+
+                                if (userIds.length) {
+                                    window.postMessage({
+                                        type: `refined.${this.name}.unmute`,
+                                        userIds
+                                    }, "*");
+                                }
+                            };
+                            afterElement.parentElement.insertBefore(form, afterElement);
+                        }
+                    }
+                });
+                contentObserver.observe(target, { childList: true, attributes: false, subtree: false });
             });
     }
 
