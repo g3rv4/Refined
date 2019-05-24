@@ -241,6 +241,10 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
 .dense_theme .c-message__content_header {
     display: inline !important;
 }
+
+.dense_theme .c-message__broadcast_preamble_outer {
+    display: none !important;
+}
 `;
     }
 
