@@ -62,6 +62,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     hideAllThreads: {
                         enabled: false
                     },
+                    removeColorsFromUsernames: {
+                        enabled: false
+                    },
                 };
             } else {
                 // it"s a fresh install, load the defaults
@@ -118,6 +121,9 @@ chrome.runtime.onInstalled.addListener(d => {
                     hideAllThreads: {
                         enabled: false
                     },
+                    removeColorsFromUsernames: {
+                        enabled: false
+                    },
                 };
             }
             chrome.storage.sync.set({
@@ -152,6 +158,10 @@ chrome.runtime.onInstalled.addListener(d => {
                 pluginUpdated = true;
                 pluginSettings.hideAllUnreads = { enabled: false };
                 pluginSettings.hideAllThreads = { enabled: false };
+            }
+            if (pluginSettings.removeColorsFromUsernames === undefined) {
+                pluginUpdated = true;
+                pluginSettings.removeColorsFromUsernames = { enabled: false };
             }
 
             if (pluginUpdated) {

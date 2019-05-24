@@ -16,6 +16,7 @@ import PostThreadMessagesOnChannel from "./plugins/postThreadMessagesOnChannel";
 import ChangeBoldAndItalics from "./plugins/changeBoldAndItalics";
 import HideAllUnreads from "./plugins/hideAllUnreads";
 import HideAllThreads from "./plugins/hideAllThreads";
+import RemoveColorsFromUsernames from "./plugins/removeColorsFromUsernames";
 export default {
     hideUsers: HideUsers,
     hangouts: Hangouts,
@@ -35,4 +36,5 @@ export default {
     changeBoldAndItalics: ChangeBoldAndItalics,
     hideAllUnreads: HideAllUnreads,
     hideAllThreads: HideAllThreads,
+    removeColorsFromUsernames: RemoveColorsFromUsernames,
 };
