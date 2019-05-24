@@ -237,6 +237,10 @@ export default abstract class PostThreadMessagesOnChannel extends BasePlugin {
 .refined-conversation-hover {
     background: #f8f8f8;
 }
+
+.dense_theme .c-message__content_header {
+    display: none !important;
+}
 `;
     }
 
