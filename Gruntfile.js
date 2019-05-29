@@ -124,7 +124,8 @@ module.exports = function (grunt) {
         // we'd need to grab it from ff... but that may have already been filled
         let content = grunt.file.read("dist/modulesjs/content_script.js");
 
-        content = content.replace('return "placeholder";', injected);
+        // escape the dollar sign to avoid replacements: https://es.stackoverflow.com/a/267800/11272
+        content = content.replace('return "placeholder";', injected.replace(/\$/g, "$$$$"));
 
         grunt.file.write("dist/ff/content_script.js", content);
         grunt.file.delete("dist/ff/injected_script.js");

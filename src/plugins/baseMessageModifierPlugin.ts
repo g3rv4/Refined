@@ -64,10 +64,12 @@ export default abstract class BaseMessageModifierPlugin extends BasePlugin {
                 text = this.doChange(text);
 
                 for (let i = 0; i < code.length; i++) {
-                    text = text.replace(`||refinedCode${i}||`, code[i]);
+                    // escape the dollar sign to avoid replacements: https://es.stackoverflow.com/a/267800/11272
+                    text = text.replace(`||refinedCode${i}||`, code[i].replace(/\$/g, "$$$$"));
                 }
                 for (let i = 0; i < blocks.length; i++) {
-                    text = text.replace(`||refinedBlock${i}||`, blocks[i]);
+                    // escape the dollar sign to avoid replacements: https://es.stackoverflow.com/a/267800/11272
+                    text = text.replace(`||refinedBlock${i}||`, blocks[i].replace(/\$/g, "$$$$"));
                 }
 
                 e.set(key, text);
