@@ -2,6 +2,10 @@
 
 An extension to improve my Slack experience. You can find it for [Chrome](https://chrome.google.com/webstore/detail/refined-a-tool-for-slack/mgicdolhkaeefgmbhlohfjoafacijbfh) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/refined-a-tool-for-slack/). Find instructions to install it on Opera [here](https://refined.chat/opera).
 
+# This extension NO LONGER WORKS
+
+I'm developing new versions in private... if you're curious why, [read my blogpost about it](https://g3rv4.com/2019/07/bye-bye-refined). If you want to fork and continue working on it, make sure you start your work on commit 5da4bd1b6206b5f6d303bae15f8c6f2e4bf1c3ff (since the last commit disables a bunch of things to explain people that the extension no longer works).
+
 ## Features
 
 Check all the features [on its website](https://refined.chat) :)

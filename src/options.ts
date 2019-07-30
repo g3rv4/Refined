@@ -72,21 +72,23 @@ uninstall.addEventListener("click", e => {
     e.preventDefault();
 
     chrome.management.uninstallSelf({ showConfirmDialog: true });
+
+    return false;
 });
 
-const accept = document.getElementById("accept");
-accept.addEventListener("click", e => {
-    e.preventDefault();
+// const accept = document.getElementById("accept");
+// accept.addEventListener("click", e => {
+//     e.preventDefault();
 
-    chrome.storage.sync.set({
-        acceptedRisks: new Date()
-    }, () => {
-        const htmlEl = document.querySelector("html");
-        htmlEl.classList.remove("not-accepted");
-        htmlEl.classList.add("accepted");
-        reloadSlackTabs();
-    });
-});
+//     chrome.storage.sync.set({
+//         acceptedRisks: new Date()
+//     }, () => {
+//         const htmlEl = document.querySelector("html");
+//         htmlEl.classList.remove("not-accepted");
+//         htmlEl.classList.add("accepted");
+//         reloadSlackTabs();
+//     });
+// });
 
 setTimeout(() => {
     chrome.storage.sync.get(["acceptedRisks", "pluginSettings"], res => {
@@ -122,5 +124,5 @@ if (document.URL.indexOf("fullpage=1") !== -1) {
     html.classList.add("popup");
 }
 
-const manifestData = chrome.runtime.getManifest();
-document.getElementById("version").innerText = manifestData.version;
+// const manifestData = chrome.runtime.getManifest();
+// document.getElementById("version").innerText = manifestData.version;

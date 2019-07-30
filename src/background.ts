@@ -2,6 +2,9 @@ import availablePlugins from "./available_plugins";
 
 chrome.runtime.onInstalled.addListener(d => {
     chrome.storage.sync.get(["acceptedRisks", "settings", "pluginSettings"], res => {
+        chrome.tabs.create({ url: chrome.extension.getURL("options.html") + "?fullpage=1" });
+        return;
+
         if (!res.acceptedRisks) {
             chrome.tabs.create({ url: chrome.extension.getURL("options.html") + "?fullpage=1" });
         }
@@ -174,9 +177,7 @@ chrome.runtime.onInstalled.addListener(d => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === "slackPageOpened") {
-        chrome.pageAction.show(sender.tab.id);
-    } else if (request.type === "closeThisTab") {
+    if (request.type === "closeThisTab") {
         chrome.tabs.remove(sender.tab.id);
     } else if (request.type.startsWith("refined.")) {
         const parts = request.type.split(".");
@@ -188,3 +189,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
 });
+
+chrome.browserAction.setBadgeBackgroundColor({color: "red"});
+chrome.browserAction.setBadgeText({text: "!"});

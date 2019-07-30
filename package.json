@@ -1,6 +1,6 @@
 {
   "name": "refined",
-  "version": "2.2.18",
+  "version": "2.3.0",
   "description": "a browser extension to tweak Slack",
   "main": "index.js",
   "scripts": {
